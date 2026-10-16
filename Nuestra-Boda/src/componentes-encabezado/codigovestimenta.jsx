@@ -1,18 +1,19 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 
 /* =========================================
-   CÓDIGO DE VESTIMENTA — CLÁSICO SIN IMÁGENES
+   CÓDIGO DE VESTIMENTA
+   ESTILO VAQUERO — FONDO SÓLIDO
 ========================================= */
 
 const palette = {
   ink: "#1D2733",
-  inkSoft: "#39434D",
+  inkSoft: "#35404B",
   paper: "#F5F1E8",
   paperLight: "#FBF9F4",
-  paperDark: "#E5DED2",
   antiqueGold: "#A48654",
-  antiqueGoldDark: "#725B37",
+  antiqueGoldDark: "#755E39",
   warmGray: "#777168",
 };
 
@@ -48,100 +49,23 @@ function CornerOrnament({ className = "" }) {
         stroke="currentColor"
         strokeWidth="1"
       />
-
       <path
         d="M15 72V34c0-10.5 8.5-19 19-19h38"
         stroke="currentColor"
         strokeWidth="0.65"
       />
-
       <path
         d="M30 5C30 18.8 18.8 30 5 30"
         stroke="currentColor"
         strokeWidth="0.75"
       />
-
       <circle cx="15" cy="15" r="2" fill="currentColor" />
     </svg>
   );
 }
 
 /* =========================================
-   RAMA BOTÁNICA
-========================================= */
-
-function BotanicalBranch({ className = "" }) {
-  return (
-    <svg
-      viewBox="0 0 150 260"
-      fill="none"
-      aria-hidden="true"
-      className={className}
-    >
-      <path
-        d="M76 252C80 192 78 130 71 12"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M76 205C54 192 41 174 35 151"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M75 167C97 153 109 133 113 109"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M73 123C53 110 43 93 39 72"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M72 83C91 71 101 53 103 34"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M35 151C49 150 60 158 67 173C52 172 41 165 35 151Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M113 109C99 109 88 117 80 132C96 131 107 123 113 109Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M39 72C53 73 63 81 69 95C54 94 44 86 39 72Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M103 34C90 35 80 42 74 55C88 54 98 47 103 34Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-    </svg>
-  );
-}
-
-/* =========================================
-   SEPARADOR CLÁSICO
+   SEPARADOR DORADO
 ========================================= */
 
 function DecorativeDivider({ compact = false }) {
@@ -150,23 +74,23 @@ function DecorativeDivider({ compact = false }) {
       <span
         className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
         style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: palette.antiqueGold,
+          opacity: 0.7,
         }}
       />
 
       <span
-        className="h-[5px] w-[5px] rotate-45 border"
+        className="h-[6px] w-[6px] rotate-45 border"
         style={{
-          borderColor: "rgba(164,134,84,0.72)",
+          borderColor: palette.antiqueGold,
         }}
       />
 
       <span
         className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
         style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: palette.antiqueGold,
+          opacity: 0.7,
         }}
       />
     </div>
@@ -174,54 +98,60 @@ function DecorativeDivider({ compact = false }) {
 }
 
 /* =========================================
-   ICONOS
+   ÍCONO DE SOMBRERO VAQUERO
 ========================================= */
 
-function SuitIcon() {
+function CowboyHatIcon() {
   return (
     <svg
-      viewBox="0 0 48 48"
+      viewBox="0 0 64 64"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.2"
+      strokeWidth="1.7"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="h-10 w-10 sm:h-12 sm:w-12"
+      className="h-12 w-12 sm:h-14 sm:w-14"
     >
-      <path d="M16 8 8 13v27h32V13l-8-5" />
-      <path d="m16 8 8 8 8-8" />
-      <path d="m19 13 5 7 5-7" />
-      <path d="M24 20v20" />
-      <path d="M16 8V4h16v4" />
-      <path d="M8 23h9" />
-      <path d="M31 23h9" />
+      <path d="M18 37 23 16c1-4 5-6 9-3 4-3 8-1 9 3l5 21" />
+      <path d="M20 31c7 5 17 5 24 0" />
+      <path d="M8 35c3 6 11 9 24 9s21-3 24-9" />
+      <path d="M8 35c-3 0-5 3-3 6 4 7 15 11 27 11s23-4 27-11c2-3 0-6-3-6" />
+      <path d="M19 36c8 5 18 5 26 0" />
     </svg>
   );
 }
 
-function DressIcon() {
+/* =========================================
+   ÍCONO DE BOTAS VAQUERAS
+========================================= */
+
+function CowboyBootIcon() {
   return (
     <svg
-      viewBox="0 0 48 48"
+      viewBox="0 0 64 64"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.2"
+      strokeWidth="1.6"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="h-10 w-10 sm:h-12 sm:w-12"
+      className="h-12 w-12 sm:h-14 sm:w-14"
     >
-      <path d="M19 5h10" />
-      <path d="M20 5c0 6-2 10-5 14" />
-      <path d="M28 5c0 6 2 10 5 14" />
-      <path d="M15 19h18" />
-      <path d="m15 19-7 23h32l-7-23" />
-      <path d="M19 5c1 3 2.5 5 5 7 2.5-2 4-4 5-7" />
-      <path d="M16 27h16" />
+      <path d="M22 9h18v26c0 5 4 9 9 11l8 3v7H18c-5 0-9-4-9-9v-5h13V9Z" />
+      <path d="M22 17h18" />
+      <path d="M22 25h18" />
+      <path d="M28 29c2 3 4 4 6 5 2-1 4-2 6-5" />
+      <path d="M18 56v3h12v-3" />
+      <path d="M45 56v3h12v-3" />
+      <path d="M9 47h15" />
     </svg>
   );
 }
+
+/* =========================================
+   ÍCONO DE CELEBRACIÓN PARA ADULTOS
+========================================= */
 
 function AdultEventIcon() {
   return (
@@ -245,7 +175,7 @@ function AdultEventIcon() {
 }
 
 /* =========================================
-   OPCIÓN DE VESTIMENTA
+   TARJETA DE VESTIMENTA
 ========================================= */
 
 function DressOption({
@@ -261,23 +191,23 @@ function DressOption({
       className="
         relative
         flex
-        min-h-[390px]
+        min-h-[370px]
         w-full
         flex-col
         items-center
         justify-center
+        overflow-hidden
         border
         px-7
         py-12
         text-center
-        sm:min-h-[430px]
+        sm:min-h-[410px]
         sm:px-10
         sm:py-14
       "
       style={{
-        backgroundColor: "rgba(251,249,244,0.76)",
-        borderColor: "rgba(164,134,84,0.3)",
-        boxShadow: "0 18px 45px rgba(29,39,51,0.06)",
+        backgroundColor: palette.paperLight,
+        borderColor: palette.antiqueGold,
       }}
       initial={{
         opacity: 0,
@@ -300,6 +230,7 @@ function DressOption({
       {/* BORDE INTERIOR */}
 
       <div
+        aria-hidden="true"
         className="
           pointer-events-none
           absolute
@@ -307,7 +238,7 @@ function DressOption({
           border
         "
         style={{
-          borderColor: "rgba(164,134,84,0.11)",
+          borderColor: "rgba(164,134,84,0.25)",
         }}
       />
 
@@ -325,13 +256,13 @@ function DressOption({
           sm:top-7
         "
         style={{
-          color: "rgba(164,134,84,0.65)",
+          color: palette.antiqueGoldDark,
         }}
       >
         {String(index + 1).padStart(2, "0")}
       </p>
 
-      {/* ICONO */}
+      {/* ÍCONO */}
 
       <div
         className="
@@ -346,7 +277,7 @@ function DressOption({
           sm:w-24
         "
         style={{
-          borderColor: "rgba(164,134,84,0.42)",
+          borderColor: palette.antiqueGold,
           color: palette.antiqueGoldDark,
         }}
       >
@@ -356,6 +287,8 @@ function DressOption({
       <div className="mt-8">
         <DecorativeDivider compact />
       </div>
+
+      {/* TÍTULO */}
 
       <h3
         className="
@@ -373,13 +306,15 @@ function DressOption({
         {title}
       </h3>
 
+      {/* SUBTÍTULO */}
+
       <p
         className="
           mt-3
-          text-[8px]
+          text-[9px]
           uppercase
-          tracking-[0.36em]
-          sm:text-[9px]
+          tracking-[0.3em]
+          sm:text-[10px]
         "
         style={{
           color: palette.antiqueGoldDark,
@@ -387,6 +322,8 @@ function DressOption({
       >
         {subtitle}
       </p>
+
+      {/* DESCRIPCIÓN */}
 
       <p
         className="
@@ -404,6 +341,8 @@ function DressOption({
       >
         {description}
       </p>
+
+      {/* DETALLE */}
 
       <p
         className="
@@ -456,41 +395,13 @@ const DressCodePremium = () => {
         lg:py-32
       "
       style={{
-        background: `
-          linear-gradient(
-            180deg,
-            ${palette.paperLight} 0%,
-            ${palette.paper} 56%,
-            ${palette.paperDark} 100%
-          )
-        `,
+        backgroundColor: palette.ink,
       }}
     >
-      {/* TEXTURA DE PAPEL */}
+      {/* MARCOS DORADOS */}
 
       <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          opacity-[0.16]
-        "
-        style={{
-          backgroundImage: `
-            repeating-linear-gradient(
-              0deg,
-              rgba(29,39,51,0.025) 0px,
-              rgba(29,39,51,0.025) 1px,
-              transparent 1px,
-              transparent 5px
-            )
-          `,
-        }}
-      />
-
-      {/* MARCOS DE LA SECCIÓN */}
-
-      <div
+        aria-hidden="true"
         className="
           pointer-events-none
           absolute
@@ -500,11 +411,12 @@ const DressCodePremium = () => {
           lg:inset-10
         "
         style={{
-          borderColor: "rgba(164,134,84,0.25)",
+          borderColor: "rgba(164,134,84,0.55)",
         }}
       />
 
       <div
+        aria-hidden="true"
         className="
           pointer-events-none
           absolute
@@ -514,11 +426,11 @@ const DressCodePremium = () => {
           lg:inset-[46px]
         "
         style={{
-          borderColor: "rgba(164,134,84,0.1)",
+          borderColor: "rgba(164,134,84,0.2)",
         }}
       />
 
-      {/* ORNAMENTOS DE ESQUINA */}
+      {/* ESQUINAS */}
 
       <CornerOrnament
         className="
@@ -528,7 +440,7 @@ const DressCodePremium = () => {
           top-6
           h-16
           w-16
-          text-[#A48654]/25
+          text-[#A48654]/60
           sm:left-9
           sm:top-9
           sm:h-20
@@ -545,7 +457,7 @@ const DressCodePremium = () => {
           h-16
           w-16
           rotate-90
-          text-[#A48654]/25
+          text-[#A48654]/60
           sm:right-9
           sm:top-9
           sm:h-20
@@ -562,7 +474,7 @@ const DressCodePremium = () => {
           h-16
           w-16
           -rotate-90
-          text-[#A48654]/25
+          text-[#A48654]/60
           sm:bottom-9
           sm:left-9
           sm:h-20
@@ -579,45 +491,11 @@ const DressCodePremium = () => {
           h-16
           w-16
           rotate-180
-          text-[#A48654]/25
+          text-[#A48654]/60
           sm:bottom-9
           sm:right-9
           sm:h-20
           sm:w-20
-        "
-      />
-
-      {/* DETALLES BOTÁNICOS */}
-
-      <BotanicalBranch
-        className="
-          pointer-events-none
-          absolute
-          -bottom-16
-          -left-8
-          h-[250px]
-          w-[145px]
-          -rotate-12
-          text-[#A48654]/10
-          sm:h-[310px]
-          sm:w-[180px]
-          lg:left-2
-        "
-      />
-
-      <BotanicalBranch
-        className="
-          pointer-events-none
-          absolute
-          -right-8
-          -top-16
-          h-[250px]
-          w-[145px]
-          rotate-[168deg]
-          text-[#A48654]/10
-          sm:h-[310px]
-          sm:w-[180px]
-          lg:right-2
         "
       />
 
@@ -644,7 +522,6 @@ const DressCodePremium = () => {
             items-center
             text-center
             sm:mb-16
-            lg:mb-20
           "
           initial={{
             opacity: 0,
@@ -662,14 +539,13 @@ const DressCodePremium = () => {
         >
           <p
             className="
-              text-[8px]
+              text-[9px]
               uppercase
-              tracking-[0.44em]
+              tracking-[0.4em]
               sm:text-[10px]
-              sm:tracking-[0.55em]
             "
             style={{
-              color: palette.antiqueGoldDark,
+              color: palette.antiqueGold,
             }}
           >
             Detalles de la celebración
@@ -691,7 +567,7 @@ const DressCodePremium = () => {
               md:text-[64px]
             "
             style={{
-              color: palette.ink,
+              color: palette.paperLight,
             }}
           >
             Código de vestimenta
@@ -700,24 +576,41 @@ const DressCodePremium = () => {
           <p
             className="
               mx-auto
-              mt-5
+              mt-6
+              max-w-2xl
+              font-serif
+              text-[19px]
+              italic
+              leading-8
+              sm:text-[24px]
+            "
+            style={{
+              color: palette.paperLight,
+            }}
+          >
+            Vestimenta estilo vaquero
+          </p>
+
+          <p
+            className="
+              mx-auto
+              mt-4
               max-w-2xl
               font-serif
               text-[14px]
-              italic
               leading-7
               sm:text-base
             "
             style={{
-              color: palette.warmGray,
+              color: "#DED6C8",
             }}
           >
-            Nos encantará verlos elegantes y acordes con la ocasión en este
-            día tan importante para nosotros.
+            ¡Prepara tus mejores botas y sombrero!
+            Te esperamos para celebrar.
           </p>
         </motion.div>
 
-        {/* OPCIONES */}
+        {/* OPCIONES DE VESTIMENTA */}
 
         <div
           className="
@@ -731,24 +624,24 @@ const DressCodePremium = () => {
         >
           <DressOption
             title="Caballeros"
-            subtitle="Vestimenta formal"
-            description="Traje formal en tonos oscuros acompañado de camisa, corbata y calzado elegante."
-            details="Sugerimos negro, azul marino, gris oscuro o tonalidades similares."
-            icon={<SuitIcon />}
+            subtitle="Estilo vaquero"
+            description="Camisa, pantalón de mezclilla o de vestir, cinturón y tus mejores botas vaqueras."
+            details="El sombrero vaquero será el complemento perfecto para la celebración."
+            icon={<CowboyHatIcon />}
             index={0}
           />
 
           <DressOption
             title="Damas"
-            subtitle="Vestimenta formal"
-            description="Vestido largo o atuendo de noche elegante, apropiado para una celebración formal."
-            details="Agradecemos reservar los colores demasiado claros para la novia."
-            icon={<DressIcon />}
+            subtitle="Estilo vaquero"
+            description="Vestido, falda o conjunto de inspiración western, acompañado de tus botas favoritas."
+            details="Puedes complementar tu atuendo con sombrero, cinturón y accesorios vaqueros."
+            icon={<CowboyBootIcon />}
             index={1}
           />
         </div>
 
-        {/* NOTA DE ETIQUETA */}
+        {/* MENSAJE ESPECIAL */}
 
         <motion.div
           className="
@@ -757,13 +650,13 @@ const DressCodePremium = () => {
             max-w-2xl
             border-y
             px-5
-            py-8
+            py-9
             text-center
             sm:mt-16
             sm:px-8
           "
           style={{
-            borderColor: "rgba(164,134,84,0.3)",
+            borderColor: "rgba(164,134,84,0.55)",
           }}
           initial={{
             opacity: 0,
@@ -781,38 +674,42 @@ const DressCodePremium = () => {
         >
           <p
             className="
-              text-[8px]
+              text-[9px]
               uppercase
-              tracking-[0.38em]
-              sm:text-[9px]
+              tracking-[0.35em]
+              sm:text-[10px]
             "
             style={{
-              color: palette.antiqueGoldDark,
+              color: palette.antiqueGold,
             }}
           >
-            Etiqueta formal
+            Lo más importante
           </p>
 
           <p
             className="
               mx-auto
-              mt-4
+              mt-5
               max-w-lg
               font-serif
-              text-[15px]
-              leading-7
-              sm:text-base
+              text-[22px]
+              italic
+              leading-9
+              sm:text-[28px]
             "
             style={{
-              color: palette.inkSoft,
+              color: palette.paperLight,
             }}
           >
-            Elegante y acorde con la ocasión. Agradecemos evitar vestimenta
-            casual, mezclilla y calzado deportivo.
+            ¡Obligatorio tener ganas de bailar y sus botas bien puestas!
           </p>
+
+          <div className="mt-6">
+            <DecorativeDivider compact />
+          </div>
         </motion.div>
 
-        {/* SOLO ADULTOS */}
+        {/* CELEBRACIÓN SOLO ADULTOS */}
 
         <motion.div
           className="
@@ -850,8 +747,8 @@ const DressCodePremium = () => {
               border
             "
             style={{
-              borderColor: "rgba(164,134,84,0.42)",
-              color: palette.antiqueGoldDark,
+              borderColor: palette.antiqueGold,
+              color: palette.antiqueGold,
             }}
           >
             <AdultEventIcon />
@@ -860,13 +757,12 @@ const DressCodePremium = () => {
           <p
             className="
               mt-5
-              text-[8px]
+              text-[9px]
               uppercase
               tracking-[0.4em]
-              sm:text-[9px]
             "
             style={{
-              color: palette.antiqueGoldDark,
+              color: palette.antiqueGold,
             }}
           >
             Consideración especial
@@ -881,7 +777,7 @@ const DressCodePremium = () => {
               sm:text-[26px]
             "
             style={{
-              color: palette.ink,
+              color: palette.paperLight,
             }}
           >
             Celebración exclusiva para adultos
@@ -897,7 +793,7 @@ const DressCodePremium = () => {
               sm:text-[15px]
             "
             style={{
-              color: palette.warmGray,
+              color: "#DED6C8",
             }}
           >
             Deseamos que esta noche sea una oportunidad para celebrar,

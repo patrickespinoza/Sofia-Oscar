@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ItinerarioRelojCentral from "./componentes-encabezado/Itinerario";
 import Regalos from "./componentes-encabezado/Regalos";
 import Confirmacion from "./componentes-encabezado/Confirmacion";
-import FrasePremium from "./componentes-encabezado/FrasePrincipal";
 import EventoDireccion from "./componentes-encabezado/Ubicacion";
 import DressCodePremium from "./componentes-encabezado/codigovestimenta";
-import Galeria from "./componentes-encabezado/Galeria";
 import Album from "./componentes-encabezado/albun";
 import Familia from "./componentes-encabezado/Familia";
 
@@ -48,13 +45,7 @@ export default function PaginaPrincipal() {
 
 <Familia/>      
 
-<FrasePremium/>
-
 <EventoDireccion/>
-
-<Galeria/>
-
-<ItinerarioRelojCentral/>
 
 <DressCodePremium/>
 

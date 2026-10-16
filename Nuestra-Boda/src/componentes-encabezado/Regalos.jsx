@@ -1,16 +1,15 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+
+import { motion } from "framer-motion";
 
 /* =========================================
-   MESA DE REGALOS — ESTILO CLÁSICO
+   LLUVIA DE SOBRES — ESTILO CLÁSICO
 ========================================= */
 
 const palette = {
   ink: "#1D2733",
   inkSoft: "#39434D",
-  paper: "#F5F1E8",
-  paperLight: "#FBF9F4",
-  paperDark: "#E5DED2",
+  champagne: "#F5F1E8",
+  white: "#FFFFFF",
   antiqueGold: "#A48654",
   antiqueGoldDark: "#725B37",
   warmGray: "#777168",
@@ -61,7 +60,12 @@ function CornerOrnament({ className = "" }) {
         strokeWidth="0.75"
       />
 
-      <circle cx="15" cy="15" r="2" fill="currentColor" />
+      <circle
+        cx="15"
+        cy="15"
+        r="2"
+        fill="currentColor"
+      />
     </svg>
   );
 }
@@ -141,32 +145,30 @@ function BotanicalBranch({ className = "" }) {
 }
 
 /* =========================================
-   SEPARADOR
+   SEPARADOR DECORATIVO
 ========================================= */
 
-function DecorativeDivider({ compact = false }) {
+function DecorativeDivider() {
   return (
     <div className="flex items-center justify-center gap-3">
       <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
+        className="h-px w-10 sm:w-16"
         style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: palette.antiqueGold,
         }}
       />
 
       <span
         className="h-[5px] w-[5px] rotate-45 border"
         style={{
-          borderColor: "rgba(164,134,84,0.72)",
+          borderColor: palette.antiqueGold,
         }}
       />
 
       <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
+        className="h-px w-10 sm:w-16"
         style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(164,134,84,0.72))",
+          backgroundColor: palette.antiqueGold,
         }}
       />
     </div>
@@ -174,62 +176,141 @@ function DecorativeDivider({ compact = false }) {
 }
 
 /* =========================================
-   ICONOS
+   ÍCONO DE SOBRE
 ========================================= */
 
-function GiftIcon({ className = "h-6 w-6" }) {
+function EnvelopeIcon({ className = "h-8 w-8" }) {
   return (
     <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.25"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={className}
-    >
-      <rect x="3" y="8" width="18" height="13" />
-      <path d="M12 8v13" />
-      <path d="M3 12h18" />
-      <path d="M7.5 8C5.6 8 4 6.7 4 5.2 4 4 5 3 6.3 3 9.2 3 12 8 12 8" />
-      <path d="M16.5 8C18.4 8 20 6.7 20 5.2 20 4 19 3 17.7 3 14.8 3 12 8 12 8" />
-    </svg>
-  );
-}
-
-function ExternalLinkIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
+      viewBox="0 0 64 64"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.3"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="h-4 w-4"
+      className={className}
     >
-      <path d="M14 5h5v5" />
-      <path d="m19 5-8 8" />
-      <path d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" />
+      <rect
+        x="7"
+        y="16"
+        width="50"
+        height="34"
+        rx="2"
+      />
+
+      <path d="M8 19L32 37L56 19" />
+
+      <path d="M8 48L24 34" />
+
+      <path d="M56 48L40 34" />
+
+      <path d="M27 12C27 9.8 29 8 32 8C35 8 37 9.8 37 12" />
     </svg>
   );
 }
 
-function CloseIcon() {
+/* =========================================
+   ILUSTRACIÓN DEL SOBRE
+========================================= */
+
+function DecorativeEnvelope() {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="0 0 320 230"
       fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
       aria-hidden="true"
-      className="h-5 w-5"
+      className="mx-auto h-auto w-full max-w-[290px] sm:max-w-[320px]"
     >
-      <path d="m6 6 12 12" />
-      <path d="M18 6 6 18" />
+      {/* Tarjeta interior */}
+      <rect
+        x="74"
+        y="24"
+        width="172"
+        height="146"
+        rx="2"
+        fill="#FFFFFF"
+        stroke="#A48654"
+        strokeWidth="1"
+      />
+
+      {/* Marco de la tarjeta */}
+      <rect
+        x="85"
+        y="35"
+        width="150"
+        height="124"
+        rx="1"
+        stroke="#A48654"
+        strokeWidth="0.6"
+        opacity="0.5"
+      />
+
+      {/* Corazón */}
+      <path
+        d="M160 82C148 69 130 83 160 106C190 83 172 69 160 82Z"
+        stroke="#A48654"
+        strokeWidth="1.3"
+        fill="none"
+      />
+
+      {/* Línea decorativa */}
+      <path
+        d="M130 120H190"
+        stroke="#A48654"
+        strokeWidth="0.8"
+      />
+
+      <path
+        d="M143 129H177"
+        stroke="#A48654"
+        strokeWidth="0.6"
+      />
+
+      {/* Cuerpo del sobre */}
+      <path
+        d="M34 100H286V204C286 210 281 215 275 215H45C39 215 34 210 34 204V100Z"
+        fill="#E5DED2"
+        stroke="#A48654"
+        strokeWidth="1.4"
+      />
+
+      {/* Solapa interior */}
+      <path
+        d="M34 100L160 187L286 100"
+        fill="#F5F1E8"
+        stroke="#A48654"
+        strokeWidth="1.2"
+      />
+
+      {/* Solapa frontal */}
+      <path
+        d="M34 210L139 142C152 134 168 134 181 142L286 210"
+        fill="#F5F1E8"
+        stroke="#A48654"
+        strokeWidth="1.2"
+      />
+
+      {/* Sello central */}
+      <circle
+        cx="160"
+        cy="179"
+        r="19"
+        fill="#A48654"
+      />
+
+      <circle
+        cx="160"
+        cy="179"
+        r="15"
+        stroke="#F5F1E8"
+        strokeWidth="0.7"
+      />
+
+      <path
+        d="M160 184C151 177 154 172 160 176C166 172 169 177 160 184Z"
+        fill="#F5F1E8"
+      />
     </svg>
   );
 }
@@ -239,856 +320,450 @@ function CloseIcon() {
 ========================================= */
 
 const Regalos = () => {
-  const [mostrarModal, setMostrarModal] = useState(false);
-
-  const numeroEvento = "12345678";
-
-  const linkLiverpool = `https://www.liverpool.com.mx/tienda/giftregistry/giftRegistryDetail.jsp?eventNo=${numeroEvento}`;
-
-  /* BLOQUEAR SCROLL CUANDO EL MODAL ESTÁ ABIERTO */
-
-  useEffect(() => {
-    if (!mostrarModal) return undefined;
-
-    const bodyOverflowAnterior = document.body.style.overflow;
-    const htmlOverflowAnterior = document.documentElement.style.overflow;
-
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = bodyOverflowAnterior;
-      document.documentElement.style.overflow = htmlOverflowAnterior;
-    };
-  }, [mostrarModal]);
-
-  /* CERRAR CON ESCAPE */
-
-  useEffect(() => {
-    if (!mostrarModal) return undefined;
-
-    const cerrarConEscape = (event) => {
-      if (event.key === "Escape") {
-        setMostrarModal(false);
-      }
-    };
-
-    window.addEventListener("keydown", cerrarConEscape);
-
-    return () => {
-      window.removeEventListener("keydown", cerrarConEscape);
-    };
-  }, [mostrarModal]);
-
   return (
-    <>
-      {/* =========================================
-          SECCIÓN PRINCIPAL
-      ========================================= */}
+    <motion.section
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{
+        once: true,
+        amount: 0.12,
+      }}
+      className="
+        relative
+        flex
+        min-h-[680px]
+        w-full
+        items-center
+        justify-center
+        overflow-hidden
+        px-5
+        py-24
+        sm:px-8
+        sm:py-28
+        lg:px-12
+        lg:py-32
+      "
+      style={{
+        backgroundColor: palette.champagne,
+      }}
+    >
+      {/* MARCO EXTERIOR */}
 
-      <motion.section
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{
-          once: true,
-          amount: 0.12,
-        }}
+      <div
+        aria-hidden="true"
         className="
-          relative
-          flex
-          min-h-[680px]
-          w-full
-          items-center
-          justify-center
-          overflow-hidden
-          px-5
-          py-24
-          sm:px-8
-          sm:py-28
-          lg:px-12
-          lg:py-32
+          pointer-events-none
+          absolute
+          inset-5
+          border
+          sm:inset-8
+          lg:inset-10
         "
         style={{
-          background: `
-            linear-gradient(
-              180deg,
-              ${palette.paperLight} 0%,
-              ${palette.paper} 56%,
-              ${palette.paperDark} 100%
-            )
-          `,
+          borderColor: "rgba(164,134,84,0.35)",
         }}
+      />
+
+      {/* MARCO INTERIOR */}
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute
+          inset-[26px]
+          border
+          sm:inset-[38px]
+          lg:inset-[46px]
+        "
+        style={{
+          borderColor: "rgba(164,134,84,0.14)",
+        }}
+      />
+
+      {/* ORNAMENTOS DE ESQUINA */}
+
+      <CornerOrnament
+        className="
+          pointer-events-none
+          absolute
+          left-6
+          top-6
+          h-16
+          w-16
+          text-[#A48654]/35
+          sm:left-9
+          sm:top-9
+          sm:h-20
+          sm:w-20
+        "
+      />
+
+      <CornerOrnament
+        className="
+          pointer-events-none
+          absolute
+          right-6
+          top-6
+          h-16
+          w-16
+          rotate-90
+          text-[#A48654]/35
+          sm:right-9
+          sm:top-9
+          sm:h-20
+          sm:w-20
+        "
+      />
+
+      <CornerOrnament
+        className="
+          pointer-events-none
+          absolute
+          bottom-6
+          left-6
+          h-16
+          w-16
+          -rotate-90
+          text-[#A48654]/35
+          sm:bottom-9
+          sm:left-9
+          sm:h-20
+          sm:w-20
+        "
+      />
+
+      <CornerOrnament
+        className="
+          pointer-events-none
+          absolute
+          bottom-6
+          right-6
+          h-16
+          w-16
+          rotate-180
+          text-[#A48654]/35
+          sm:bottom-9
+          sm:right-9
+          sm:h-20
+          sm:w-20
+        "
+      />
+
+      {/* RAMAS BOTÁNICAS */}
+
+      <BotanicalBranch
+        className="
+          pointer-events-none
+          absolute
+          -bottom-16
+          -left-8
+          h-[250px]
+          w-[145px]
+          -rotate-12
+          text-[#A48654]/15
+          sm:h-[310px]
+          sm:w-[180px]
+          lg:left-2
+        "
+      />
+
+      <BotanicalBranch
+        className="
+          pointer-events-none
+          absolute
+          -right-8
+          -top-16
+          h-[250px]
+          w-[145px]
+          rotate-[168deg]
+          text-[#A48654]/15
+          sm:h-[310px]
+          sm:w-[180px]
+          lg:right-2
+        "
+      />
+
+      {/* CONTENIDO */}
+
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          flex
+          w-full
+          max-w-4xl
+          flex-col
+          items-center
+          text-center
+        "
       >
-        {/* TEXTURA DE PAPEL */}
+        {/* ÍCONO */}
 
-        <div
+        <motion.div
           className="
-            pointer-events-none
-            absolute
-            inset-0
-            opacity-[0.16]
-          "
-          style={{
-            backgroundImage: `
-              repeating-linear-gradient(
-                0deg,
-                rgba(29,39,51,0.025) 0px,
-                rgba(29,39,51,0.025) 1px,
-                transparent 1px,
-                transparent 5px
-              )
-            `,
-          }}
-        />
-
-        {/* MARCOS */}
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-5
-            border
-            sm:inset-8
-            lg:inset-10
-          "
-          style={{
-            borderColor: "rgba(164,134,84,0.25)",
-          }}
-        />
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-[26px]
-            border
-            sm:inset-[38px]
-            lg:inset-[46px]
-          "
-          style={{
-            borderColor: "rgba(164,134,84,0.1)",
-          }}
-        />
-
-        {/* ORNAMENTOS */}
-
-        <CornerOrnament
-          className="
-            pointer-events-none
-            absolute
-            left-6
-            top-6
-            h-16
-            w-16
-            text-[#A48654]/25
-            sm:left-9
-            sm:top-9
-            sm:h-20
-            sm:w-20
-          "
-        />
-
-        <CornerOrnament
-          className="
-            pointer-events-none
-            absolute
-            right-6
-            top-6
-            h-16
-            w-16
-            rotate-90
-            text-[#A48654]/25
-            sm:right-9
-            sm:top-9
-            sm:h-20
-            sm:w-20
-          "
-        />
-
-        <CornerOrnament
-          className="
-            pointer-events-none
-            absolute
-            bottom-6
-            left-6
-            h-16
-            w-16
-            -rotate-90
-            text-[#A48654]/25
-            sm:bottom-9
-            sm:left-9
-            sm:h-20
-            sm:w-20
-          "
-        />
-
-        <CornerOrnament
-          className="
-            pointer-events-none
-            absolute
-            bottom-6
-            right-6
-            h-16
-            w-16
-            rotate-180
-            text-[#A48654]/25
-            sm:bottom-9
-            sm:right-9
-            sm:h-20
-            sm:w-20
-          "
-        />
-
-        <BotanicalBranch
-          className="
-            pointer-events-none
-            absolute
-            -bottom-16
-            -left-8
-            h-[250px]
-            w-[145px]
-            -rotate-12
-            text-[#A48654]/10
-            sm:h-[310px]
-            sm:w-[180px]
-            lg:left-2
-          "
-        />
-
-        <BotanicalBranch
-          className="
-            pointer-events-none
-            absolute
-            -right-8
-            -top-16
-            h-[250px]
-            w-[145px]
-            rotate-[168deg]
-            text-[#A48654]/10
-            sm:h-[310px]
-            sm:w-[180px]
-            lg:right-2
-          "
-        />
-
-        {/* CONTENIDO */}
-
-        <div
-          className="
-            relative
-            z-10
-            mx-auto
             flex
-            w-full
-            max-w-4xl
-            flex-col
+            h-16
+            w-16
             items-center
-            text-center
+            justify-center
+            rounded-full
+            border
+            sm:h-20
+            sm:w-20
           "
+          style={{
+            color: palette.antiqueGoldDark,
+            borderColor: "rgba(164,134,84,0.42)",
+          }}
+          initial={{
+            opacity: 0,
+            scale: 0.92,
+          }}
+          whileInView={{
+            opacity: 1,
+            scale: 1,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.8,
+          }}
         >
-          <motion.div
-            className="
-              flex
-              h-16
-              w-16
-              items-center
-              justify-center
-              rounded-full
-              border
-              sm:h-20
-              sm:w-20
-            "
-            style={{
-              color: palette.antiqueGoldDark,
-              borderColor: "rgba(164,134,84,0.42)",
-            }}
-            initial={{
-              opacity: 0,
-              scale: 0.92,
-            }}
-            whileInView={{
-              opacity: 1,
-              scale: 1,
-            }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.8,
-            }}
-          >
-            <GiftIcon className="h-7 w-7 sm:h-8 sm:w-8" />
-          </motion.div>
+          <EnvelopeIcon />
+        </motion.div>
 
-          <motion.p
+        {/* TEXTO SUPERIOR */}
+
+        <motion.p
+          className="
+            mt-7
+            text-[8px]
+            uppercase
+            tracking-[0.44em]
+            sm:text-[10px]
+            sm:tracking-[0.55em]
+          "
+          style={{
+            color: palette.antiqueGoldDark,
+          }}
+          initial={{
+            opacity: 0,
+            y: 10,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.8,
+            delay: 0.08,
+          }}
+        >
+          Un detalle con mucho cariño
+        </motion.p>
+
+        {/* SEPARADOR */}
+
+        <div className="mt-5">
+          <DecorativeDivider />
+        </div>
+
+        {/* TÍTULO */}
+
+        <motion.h2
+          className="
+            mt-8
+            font-serif
+            text-[40px]
+            font-normal
+            leading-tight
+            tracking-[-0.025em]
+            sm:text-[54px]
+            md:text-[64px]
+          "
+          style={{
+            color: palette.ink,
+          }}
+          initial={{
+            opacity: 0,
+            y: 16,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.9,
+            delay: 0.12,
+          }}
+        >
+          Lluvia de sobres
+        </motion.h2>
+
+        {/* DESCRIPCIÓN */}
+
+        <motion.p
+          className="
+            mx-auto
+            mt-6
+            max-w-2xl
+            font-serif
+            text-[15px]
+            italic
+            leading-7
+            sm:text-[17px]
+            sm:leading-8
+          "
+          style={{
+            color: palette.warmGray,
+          }}
+          initial={{
+            opacity: 0,
+            y: 14,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.9,
+            delay: 0.18,
+          }}
+        >
+          Tu presencia en este día tan especial es nuestro mayor regalo.
+          Si deseas obsequiarnos un detalle adicional, tendremos
+          lluvia de sobres durante nuestra celebración.
+        </motion.p>
+
+        {/* ILUSTRACIÓN */}
+
+        <motion.div
+          className="mt-9 w-full"
+          initial={{
+            opacity: 0,
+            y: 18,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.9,
+            delay: 0.22,
+          }}
+        >
+          <DecorativeEnvelope />
+        </motion.div>
+
+        {/* INFORMACIÓN */}
+
+        <motion.div
+          className="
+            mx-auto
+            mt-8
+            w-full
+            max-w-xl
+            border-y
+            px-5
+            py-8
+            sm:mt-10
+            sm:px-10
+          "
+          style={{
+            borderColor: "rgba(164,134,84,0.35)",
+          }}
+          initial={{
+            opacity: 0,
+            y: 14,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.85,
+            delay: 0.24,
+          }}
+        >
+          <p
             className="
-              mt-7
-              text-[8px]
+              text-[9px]
               uppercase
-              tracking-[0.44em]
+              tracking-[0.32em]
               sm:text-[10px]
-              sm:tracking-[0.55em]
             "
             style={{
               color: palette.antiqueGoldDark,
             }}
-            initial={{
-              opacity: 0,
-              y: 10,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.8,
-              delay: 0.08,
+          >
+            ¿Cómo funciona?
+          </p>
+
+          <p
+            className="
+              mt-5
+              font-serif
+              text-[15px]
+              leading-8
+              sm:text-[17px]
+            "
+            style={{
+              color: palette.inkSoft,
             }}
           >
-            Un detalle para nuestro hogar
-          </motion.p>
+            El día del evento podrás depositar tu regalo en efectivo
+            dentro de un sobre y entregarlo en el espacio destinado
+            para nuestra lluvia de sobres.
+          </p>
+        </motion.div>
 
-          <div className="mt-5">
-            <DecorativeDivider />
-          </div>
+        {/* MENSAJE FINAL */}
 
-          <motion.h2
+        <motion.div
+          className="mx-auto mt-10 max-w-xl text-center"
+          initial={{
+            opacity: 0,
+            y: 12,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.85,
+            delay: 0.3,
+          }}
+        >
+          <p
             className="
-              mt-8
               font-serif
-              text-[40px]
-              font-normal
-              leading-tight
-              tracking-[-0.025em]
-              sm:text-[54px]
-              md:text-[64px]
+              text-[19px]
+              italic
+              leading-8
+              sm:text-[22px]
             "
             style={{
               color: palette.ink,
             }}
-            initial={{
-              opacity: 0,
-              y: 16,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.9,
-              delay: 0.12,
-            }}
           >
-            Mesa de regalos
-          </motion.h2>
+            Gracias por acompañarnos y ser parte
+            del comienzo de nuestra historia.
+          </p>
 
-          <motion.p
-            className="
-              mx-auto
-              mt-6
-              max-w-2xl
-              font-serif
-              text-[15px]
-              italic
-              leading-7
-              sm:text-[17px]
-              sm:leading-8
-            "
-            style={{
-              color: palette.warmGray,
-            }}
-            initial={{
-              opacity: 0,
-              y: 14,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.9,
-              delay: 0.18,
-            }}
-          >
-            Su presencia en este día es el regalo más importante para nosotros.
-            Para quienes deseen tener un detalle adicional, hemos preparado una
-            mesa de regalos en Liverpool.
-          </motion.p>
-
-          {/* INFORMACIÓN BREVE */}
-
-          <motion.div
-            className="
-              mx-auto
-              mt-10
-              w-full
-              max-w-xl
-              border-y
-              px-5
-              py-7
-              sm:mt-12
-              sm:px-10
-            "
-            style={{
-              borderColor: "rgba(164,134,84,0.3)",
-            }}
-            initial={{
-              opacity: 0,
-              y: 14,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.85,
-              delay: 0.24,
-            }}
-          >
-            <p
-              className="
-                text-[8px]
-                uppercase
-                tracking-[0.38em]
-                sm:text-[9px]
-              "
-              style={{
-                color: palette.antiqueGoldDark,
-              }}
-            >
-              Liverpool
-            </p>
-
-            <p
-              className="
-                mt-4
-                font-serif
-                text-[15px]
-                leading-7
-                sm:text-base
-              "
-              style={{
-                color: palette.inkSoft,
-              }}
-            >
-              Consulta el número de evento y el acceso directo dentro de
-              nuestra tarjeta de regalos.
-            </p>
-          </motion.div>
-
-          {/* BOTÓN */}
-
-          <motion.button
-            type="button"
-            onClick={() => setMostrarModal(true)}
-            className="
-              mt-10
-              inline-flex
-              min-w-[240px]
-              items-center
-              justify-center
-              gap-3
-              border
-              px-8
-              py-4
-              sm:min-w-[280px]
-              sm:px-10
-            "
-            style={{
-              backgroundColor: palette.ink,
-              borderColor: palette.ink,
-              color: palette.paperLight,
-              boxShadow: "0 12px 28px rgba(29,39,51,0.12)",
-            }}
-            whileHover={{
-              y: -2,
-              backgroundColor: palette.inkSoft,
-            }}
-            whileTap={{
-              scale: 0.985,
-            }}
-          >
-            <GiftIcon className="h-4 w-4" />
-
-            <span
-              className="
-                text-[9px]
-                uppercase
-                tracking-[0.28em]
-                sm:text-[10px]
-                sm:tracking-[0.34em]
-              "
-            >
-              Ver mesa de regalos
-            </span>
-          </motion.button>
-        </div>
-      </motion.section>
-
-      {/* =========================================
-          MODAL
-      ========================================= */}
-
-      <AnimatePresence>
-        {mostrarModal && (
-          <motion.div
-            className="
-              fixed
-              inset-0
-              z-[9999]
-              flex
-              h-[100dvh]
-              w-full
-              items-center
-              justify-center
-              overflow-hidden
-              bg-[#111820]/78
-              px-4
-              py-5
-              backdrop-blur-sm
-              sm:px-8
-            "
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            transition={{
-              duration: 0.3,
-            }}
-            onMouseDown={(event) => {
-              if (event.target === event.currentTarget) {
-                setMostrarModal(false);
-              }
-            }}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="gift-modal-title"
-          >
-            <motion.div
-              className="
-                relative
-                max-h-[92dvh]
-                w-full
-                max-w-2xl
-                overflow-y-auto
-                border
-                px-6
-                py-14
-                text-center
-                sm:px-10
-                sm:py-16
-                md:px-14
-              "
-              style={{
-                backgroundColor: palette.paperLight,
-                borderColor: "rgba(164,134,84,0.48)",
-                boxShadow: "0 30px 100px rgba(0,0,0,0.34)",
-              }}
-              initial={{
-                opacity: 0,
-                y: 24,
-                scale: 0.97,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                scale: 1,
-              }}
-              exit={{
-                opacity: 0,
-                y: 16,
-                scale: 0.98,
-              }}
-              transition={{
-                duration: 0.45,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              {/* TEXTURA */}
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  inset-0
-                  opacity-[0.14]
-                "
-                style={{
-                  backgroundImage: `
-                    repeating-linear-gradient(
-                      0deg,
-                      rgba(29,39,51,0.025) 0px,
-                      rgba(29,39,51,0.025) 1px,
-                      transparent 1px,
-                      transparent 5px
-                    )
-                  `,
-                }}
-              />
-
-              {/* BORDE INTERIOR */}
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  inset-[7px]
-                  border
-                "
-                style={{
-                  borderColor: "rgba(164,134,84,0.15)",
-                }}
-              />
-
-              {/* CERRAR */}
-
-              <motion.button
-                type="button"
-                onClick={() => setMostrarModal(false)}
-                aria-label="Cerrar mesa de regalos"
-                className="
-                  absolute
-                  right-4
-                  top-4
-                  z-30
-                  flex
-                  h-10
-                  w-10
-                  items-center
-                  justify-center
-                  border
-                  bg-[#FBF9F4]
-                  sm:right-6
-                  sm:top-6
-                "
-                style={{
-                  color: palette.ink,
-                  borderColor: "rgba(164,134,84,0.42)",
-                }}
-                whileHover={{
-                  scale: 1.04,
-                  backgroundColor: palette.paper,
-                }}
-                whileTap={{
-                  scale: 0.96,
-                }}
-              >
-                <CloseIcon />
-              </motion.button>
-
-              {/* CONTENIDO */}
-
-              <div
-                className="
-                  relative
-                  z-10
-                  flex
-                  w-full
-                  flex-col
-                  items-center
-                "
-              >
-                <div
-                  className="
-                    flex
-                    h-14
-                    w-14
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                  "
-                  style={{
-                    color: palette.antiqueGoldDark,
-                    borderColor: "rgba(164,134,84,0.42)",
-                  }}
-                >
-                  <GiftIcon />
-                </div>
-
-                <p
-                  className="
-                    mt-6
-                    text-[8px]
-                    uppercase
-                    tracking-[0.42em]
-                    sm:text-[9px]
-                  "
-                  style={{
-                    color: palette.antiqueGoldDark,
-                  }}
-                >
-                  Mesa de regalos
-                </p>
-
-                <div className="mt-5">
-                  <DecorativeDivider />
-                </div>
-
-                <h2
-                  id="gift-modal-title"
-                  className="
-                    mt-7
-                    font-serif
-                    text-[36px]
-                    font-normal
-                    tracking-[-0.02em]
-                    sm:text-[46px]
-                  "
-                  style={{
-                    color: palette.ink,
-                  }}
-                >
-                  Liverpool
-                </h2>
-
-                <p
-                  className="
-                    mx-auto
-                    mt-5
-                    max-w-lg
-                    font-serif
-                    text-[14px]
-                    italic
-                    leading-7
-                    sm:text-base
-                  "
-                  style={{
-                    color: palette.warmGray,
-                  }}
-                >
-                  Hemos seleccionado algunos detalles que serán parte del hogar
-                  y de la nueva etapa que comenzaremos juntos.
-                </p>
-
-                {/* NÚMERO DE EVENTO */}
-
-                <div
-                  className="
-                    mx-auto
-                    mt-10
-                    w-full
-                    max-w-md
-                    border-y
-                    px-5
-                    py-8
-                  "
-                  style={{
-                    borderColor: "rgba(164,134,84,0.32)",
-                  }}
-                >
-                  <p
-                    className="
-                      text-[8px]
-                      uppercase
-                      tracking-[0.38em]
-                      sm:text-[9px]
-                    "
-                    style={{
-                      color: palette.warmGray,
-                    }}
-                  >
-                    Número de evento
-                  </p>
-
-                  <p
-                    className="
-                      mt-4
-                      break-all
-                      font-serif
-                      text-[32px]
-                      tracking-[0.12em]
-                      sm:text-[40px]
-                      sm:tracking-[0.18em]
-                    "
-                    style={{
-                      color: palette.ink,
-                    }}
-                  >
-                    {numeroEvento}
-                  </p>
-                </div>
-
-                {/* BOTÓN LIVERPOOL */}
-
-                <motion.a
-                  href={linkLiverpool}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="
-                    mt-10
-                    inline-flex
-                    min-w-[230px]
-                    items-center
-                    justify-center
-                    gap-3
-                    border
-                    px-8
-                    py-4
-                    sm:min-w-[270px]
-                  "
-                  style={{
-                    backgroundColor: palette.ink,
-                    borderColor: palette.ink,
-                    color: palette.paperLight,
-                  }}
-                  whileHover={{
-                    y: -2,
-                    backgroundColor: palette.inkSoft,
-                  }}
-                  whileTap={{
-                    scale: 0.985,
-                  }}
-                >
-                  <ExternalLinkIcon />
-
-                  <span
-                    className="
-                      text-[9px]
-                      uppercase
-                      tracking-[0.28em]
-                      sm:text-[10px]
-                    "
-                  >
-                    Abrir mesa en Liverpool
-                  </span>
-                </motion.a>
-
-                <div className="mt-10">
-                  <DecorativeDivider compact />
-                </div>
-
-                <p
-                  className="
-                    mt-6
-                    max-w-lg
-                    font-serif
-                    text-[14px]
-                    italic
-                    leading-7
-                  "
-                  style={{
-                    color: palette.inkSoft,
-                  }}
-                >
-                  Gracias por acompañarnos y por formar parte de este nuevo
-                  capítulo de nuestra historia.
-                </p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+          <div className="mt-7">
+            <DecorativeDivider />
+          </div>
+        </motion.div>
+      </div>
+    </motion.section>
   );
 };
 

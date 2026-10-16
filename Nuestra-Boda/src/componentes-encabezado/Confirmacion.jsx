@@ -1,3 +1,4 @@
+
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
@@ -6,134 +7,99 @@ import { useEffect, useMemo, useState } from "react";
 ========================================= */
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbxklU9PTlqxkcu9pBUfWYhByQZ_7kJWuFENeeQhlEW-C6eh2cVbTK3z2AbMJiWVL1ME/exec";
+  "https://script.google.com/macros/s/AKfycbwsaI4xEtRRhfscMbNJGF7Dqy2X4KjgVzHWyv0A0hNc2p0NIu8InFkLdHRKGcHxsYcI/exec";
 
-/*
-  Coloca los números con código de país, sin:
-  +, espacios, guiones ni paréntesis.
+// WhatsApp con código de país de México.
+const NUMERO_NOVIA = "522212524729";
+const NUMERO_NOVIO = "526694341659";
 
-  Ejemplo México:
-  5215512345678
-*/
-
-const NUMERO_NOVIA = "521XXXXXXXXXX";
-const NUMERO_NOVIO = "521XXXXXXXXXX";
-
-const NOMBRE_NOVIA = "Allison";
-const NOMBRE_NOVIO = "David";
+// Nombres que aparecen en los botones y mensajes.
+const NOMBRE_NOVIA = "Sofia";
+const NOMBRE_NOVIO = "Alejandro";
 
 const palette = {
   ink: "#1D2733",
   inkSoft: "#39434D",
   paper: "#F5F1E8",
   paperLight: "#FBF9F4",
-  paperDark: "#E5DED2",
   antiqueGold: "#A48654",
   antiqueGoldDark: "#725B37",
-  warmGray: "#777168",
-  error: "#8B3A3A",
+  mutedGold: "#D7C49F",
+  error: "#A33F3F",
   success: "#49644D",
 };
 
 const fadeUp = {
-  hidden: {
-    opacity: 0,
-    y: 24,
-  },
+  hidden: { opacity: 0, y: 24 },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.9,
+      duration: 0.85,
       ease: [0.22, 1, 0.36, 1],
     },
   },
 };
 
 /* =========================================
-   DECODIFICACIÓN DEL GENERADOR
+   DECODIFICAR ENLACES DEL GENERADOR
 ========================================= */
 
 /*
-  Este decodificador es compatible con un generador que haga:
+  Compatible con:
 
-  1. JSON.stringify({ nombre, pases })
-  2. invertir el texto
-  3. convertir a Base64 con btoa()
-  4. colocar el resultado en ?id=...
-
-  También admite Base64 URL-safe:
-  - en lugar de +
-  _ en lugar de /
+  JSON.stringify({ nombre, pases })
+    -> invertir texto
+    -> btoa()
+    -> reemplazar + por -
+    -> reemplazar / por _
+    -> quitar =
+    -> ?id=...
 */
 
-function normalizeBase64(value) {
-  const normalized = value
+function decodificarInvitacion(id) {
+  if (!id) return null;
+
+  const base64 = id
     .trim()
     .replace(/-/g, "+")
     .replace(/_/g, "/");
 
-  const remainder = normalized.length % 4;
+  const relleno = "=".repeat((4 - (base64.length % 4)) % 4);
 
-  if (remainder === 0) {
-    return normalized;
+  const textoInvertido = window.atob(base64 + relleno);
+
+  // Se revierte exactamente la operación del generador.
+  const textoOriginal = textoInvertido
+    .split("")
+    .reverse()
+    .join("");
+
+  const datos = JSON.parse(textoOriginal);
+
+  if (
+    !datos ||
+    typeof datos !== "object" ||
+    typeof datos.nombre !== "string" ||
+    !datos.nombre.trim()
+  ) {
+    throw new Error("El enlace no contiene un nombre válido.");
   }
 
-  return normalized + "=".repeat(4 - remainder);
-}
+  const pases = Number(datos.pases);
 
-function decodeBase64Utf8(value) {
-  const binary = window.atob(normalizeBase64(value));
-
-  try {
-    const bytes = Uint8Array.from(binary, (character) =>
-      character.charCodeAt(0)
-    );
-
-    return new TextDecoder("utf-8", {
-      fatal: false,
-    }).decode(bytes);
-  } catch {
-    return binary;
-  }
-}
-
-function parseInvitationData(encodedId) {
-  if (!encodedId) return null;
-
-  const decodedValue = decodeURIComponent(encodedId);
-
-  /*
-    Intentamos varios formatos para que sea más resistente:
-
-    1. Base64 → texto invertido → JSON.
-    2. Base64 → JSON directo.
-  */
-
-  const decodedText = decodeBase64Utf8(decodedValue);
-
-  const possibleValues = [
-    decodedText.split("").reverse().join(""),
-    decodedText,
-  ];
-
-  for (const possibleValue of possibleValues) {
-    try {
-      const parsedData = JSON.parse(possibleValue);
-
-      if (parsedData && typeof parsedData === "object") {
-        return parsedData;
-      }
-    } catch {
-      // Continúa con el siguiente formato.
-    }
+  if (!Number.isInteger(pases) || pases < 1 || pases > 100) {
+    throw new Error("El enlace no contiene pases válidos.");
   }
 
-  throw new Error("El enlace de invitación no tiene un formato válido.");
+  return {
+    nombre: datos.nombre.trim(),
+    pases,
+  };
 }
 
 /* =========================================
-   ORNAMENTOS
+   DECORACIONES
 ========================================= */
 
 function CornerOrnament({ className = "" }) {
@@ -149,126 +115,30 @@ function CornerOrnament({ className = "" }) {
         stroke="currentColor"
         strokeWidth="1"
       />
-
       <path
         d="M15 72V34c0-10.5 8.5-19 19-19h38"
         stroke="currentColor"
         strokeWidth="0.65"
       />
-
       <path
         d="M30 5C30 18.8 18.8 30 5 30"
         stroke="currentColor"
         strokeWidth="0.75"
       />
-
       <circle cx="15" cy="15" r="2" fill="currentColor" />
     </svg>
   );
 }
 
-function BotanicalBranch({ className = "" }) {
-  return (
-    <svg
-      viewBox="0 0 150 260"
-      fill="none"
-      aria-hidden="true"
-      className={className}
-    >
-      <path
-        d="M76 252C80 192 78 130 71 12"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M76 205C54 192 41 174 35 151"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M75 167C97 153 109 133 113 109"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M73 123C53 110 43 93 39 72"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M72 83C91 71 101 53 103 34"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M35 151C49 150 60 158 67 173C52 172 41 165 35 151Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M113 109C99 109 88 117 80 132C96 131 107 123 113 109Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M39 72C53 73 63 81 69 95C54 94 44 86 39 72Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-
-      <path
-        d="M103 34C90 35 80 42 74 55C88 54 98 47 103 34Z"
-        stroke="currentColor"
-        strokeWidth="0.7"
-      />
-    </svg>
-  );
-}
-
-function DecorativeDivider({ compact = false }) {
+function DecorativeDivider() {
   return (
     <div className="flex items-center justify-center gap-3">
-      <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
-        style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(164,134,84,0.72))",
-        }}
-      />
-
-      <span
-        className="h-[5px] w-[5px] rotate-45 border"
-        style={{
-          borderColor: "rgba(164,134,84,0.72)",
-        }}
-      />
-
-      <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
-        style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(164,134,84,0.72))",
-        }}
-      />
+      <span className="h-px w-10 bg-[#A48654] sm:w-16" />
+      <span className="h-1.5 w-1.5 rotate-45 border border-[#A48654]" />
+      <span className="h-px w-10 bg-[#A48654] sm:w-16" />
     </div>
   );
 }
-
-/* =========================================
-   ICONOS
-========================================= */
 
 function EnvelopeIcon() {
   return (
@@ -276,13 +146,13 @@ function EnvelopeIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.25"
+      strokeWidth="1.2"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="h-6 w-6"
+      className="h-7 w-7"
     >
-      <rect x="3" y="5" width="18" height="14" />
+      <rect x="3" y="5" width="18" height="14" rx="1" />
       <path d="m3 7 9 7 9-7" />
     </svg>
   );
@@ -294,31 +164,14 @@ function WhatsAppIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.35"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className="h-4 w-4"
-    >
-      <path d="M20.5 11.5a8.5 8.5 0 0 1-12.7 7.4L3 20l1.2-4.6A8.5 8.5 0 1 1 20.5 11.5Z" />
-      <path d="M8.2 7.8c.3-.4.6-.4.9-.1l1.1 1.5c.2.3.2.6 0 .9l-.6.8c-.2.3 0 .7.3 1.1.7 1 1.5 1.8 2.6 2.4.4.2.8.3 1.1 0l.8-.8c.3-.3.6-.3.9-.1l1.5 1c.4.2.4.6.2.9-.5 1-1.4 1.6-2.5 1.6-1.6 0-3.8-1.2-5.6-3-1.7-1.7-2.9-3.9-2.9-5.4 0-.9.4-1.9 1.2-2.8Z" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
       strokeWidth="1.4"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
       className="h-5 w-5"
     >
-      <path d="m5 12 4 4L19 6" />
+      <path d="M20.5 11.5a8.5 8.5 0 0 1-12.7 7.4L3 20l1.2-4.6A8.5 8.5 0 1 1 20.5 11.5Z" />
+      <path d="M8.2 7.8c.3-.4.6-.4.9-.1l1.1 1.5c.2.3.2.6 0 .9l-.6.8c-.2.3 0 .7.3 1.1.7 1 1.5 1.8 2.6 2.4.4.2.8.3 1.1 0l.8-.8c.3-.3.6-.3.9-.1l1.5 1c.4.2.4.6.2.9-.5 1-1.4 1.6-2.5 1.6-1.6 0-3.8-1.2-5.6-3-1.7-1.7-2.9-3.9-2.9-5.4 0-.9.4-1.9 1.2-2.8Z" />
     </svg>
   );
 }
@@ -330,8 +183,6 @@ function LockIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth="1.3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       aria-hidden="true"
       className="h-4 w-4"
     >
@@ -342,7 +193,7 @@ function LockIcon() {
 }
 
 /* =========================================
-   CAMPO DE ASISTENCIA
+   OPCIÓN DE ASISTENCIA
 ========================================= */
 
 function AttendanceOption({
@@ -352,27 +203,19 @@ function AttendanceOption({
   title,
   description,
 }) {
-  const isSelected = selectedValue === value;
+  const selected = value === selectedValue;
 
   return (
     <label
       className="
-        relative
-        flex
-        cursor-pointer
-        items-start
-        gap-4
-        border
-        px-5
-        py-4
-        text-left
-        transition
+        flex cursor-pointer items-start gap-4
+        border px-5 py-5 text-left transition-colors
       "
       style={{
-        backgroundColor: isSelected
-          ? "rgba(29,39,51,0.055)"
+        backgroundColor: selected
+          ? palette.paper
           : palette.paperLight,
-        borderColor: isSelected
+        borderColor: selected
           ? palette.antiqueGold
           : "rgba(164,134,84,0.3)",
       }}
@@ -381,66 +224,31 @@ function AttendanceOption({
         type="radio"
         name="asistencia"
         value={value}
-        checked={isSelected}
+        checked={selected}
         onChange={() => onChange(value)}
         className="sr-only"
       />
 
       <span
         className="
-          mt-0.5
-          flex
-          h-5
-          w-5
-          shrink-0
-          items-center
-          justify-center
-          rounded-full
-          border
+          mt-1 flex h-5 w-5 shrink-0
+          items-center justify-center rounded-full border
         "
         style={{
-          borderColor: isSelected
-            ? palette.antiqueGoldDark
-            : "rgba(119,113,104,0.6)",
+          borderColor: palette.antiqueGold,
         }}
       >
-        {isSelected && (
-          <span
-            className="h-2.5 w-2.5 rounded-full"
-            style={{
-              backgroundColor: palette.antiqueGoldDark,
-            }}
-          />
+        {selected && (
+          <span className="h-2.5 w-2.5 rounded-full bg-[#A48654]" />
         )}
       </span>
 
       <span>
-        <span
-          className="
-            block
-            font-serif
-            text-[15px]
-            sm:text-base
-          "
-          style={{
-            color: palette.ink,
-          }}
-        >
+        <span className="block font-serif text-base text-[#1D2733]">
           {title}
         </span>
 
-        <span
-          className="
-            mt-1
-            block
-            text-[12px]
-            leading-5
-            sm:text-[13px]
-          "
-          style={{
-            color: palette.warmGray,
-          }}
-        >
+        <span className="mt-1 block text-xs leading-5 text-[#777168]">
           {description}
         </span>
       </span>
@@ -449,92 +257,66 @@ function AttendanceOption({
 }
 
 /* =========================================
-   COMPONENTE
+   COMPONENTE PRINCIPAL
 ========================================= */
 
-const Confirmacion = () => {
+export default function Confirmacion() {
   const [nombreInvitado, setNombreInvitado] = useState("");
   const [pasesAsignados, setPasesAsignados] = useState(1);
-  const [datosDesdeGenerador, setDatosDesdeGenerador] = useState(false);
+  const [datosDesdeGenerador, setDatosDesdeGenerador] =
+    useState(false);
 
-  const [mensajeInvitado, setMensajeInvitado] = useState("");
   const [asistencia, setAsistencia] = useState("");
   const [invitados, setInvitados] = useState(1);
+  const [mensajeInvitado, setMensajeInvitado] = useState("");
 
   const [error, setError] = useState("");
-  const [loadingSide, setLoadingSide] = useState("");
-  const [enviado, setEnviado] = useState(false);
   const [urlError, setUrlError] = useState("");
+  const [loadingSide, setLoadingSide] = useState("");
+  const [aviso, setAviso] = useState("");
 
   /* =========================================
-     LEER Y DECODIFICAR URL
+     RECUPERAR NOMBRE Y PASES DE LA URL
   ========================================= */
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
 
-    const encodedId = params.get("id");
-    const visibleName = params.get("nombre");
-    const visiblePasses = params.get("pases");
+    const id = params.get("id");
 
     try {
-      let invitationData = null;
+      if (id) {
+        const datos = decodificarInvitacion(id);
 
-      if (encodedId) {
-        invitationData = parseInvitationData(encodedId);
-      } else if (visibleName || visiblePasses) {
-        /*
-          Respaldo temporal para enlaces anteriores:
+        setNombreInvitado(datos.nombre);
+        setPasesAsignados(datos.pases);
+        setInvitados(datos.pases);
+        setDatosDesdeGenerador(true);
+        setUrlError("");
 
-          ?nombre=Familia%20López&pases=4
-        */
-
-        invitationData = {
-          nombre: visibleName,
-          pases: visiblePasses,
-        };
-      }
-
-      if (!invitationData) {
-        setDatosDesdeGenerador(false);
         return;
       }
 
-      const decodedName =
-        typeof invitationData.nombre === "string"
-          ? invitationData.nombre.trim()
-          : "";
+      // Compatibilidad con enlaces antiguos.
+      const nombre = params.get("nombre");
+      const pases = Number(params.get("pases"));
 
-      /*
-        Aceptamos varias propiedades por compatibilidad:
-        pases, invitados, cantidad o lugares.
-      */
-
-      const decodedPasses = Number.parseInt(
-        invitationData.pases ??
-          invitationData.invitados ??
-          invitationData.cantidad ??
-          invitationData.lugares ??
-          1,
-        10
-      );
-
-      if (decodedName) {
-        setNombreInvitado(decodedName);
+      if (
+        nombre?.trim() &&
+        Number.isInteger(pases) &&
+        pases >= 1 &&
+        pases <= 100
+      ) {
+        setNombreInvitado(nombre.trim());
+        setPasesAsignados(pases);
+        setInvitados(pases);
+        setDatosDesdeGenerador(true);
       }
-
-      if (!Number.isNaN(decodedPasses) && decodedPasses > 0) {
-        setPasesAsignados(decodedPasses);
-        setInvitados(decodedPasses);
-      }
-
-      setDatosDesdeGenerador(Boolean(decodedName));
-      setUrlError("");
-    } catch (decodeError) {
-      console.error("No se pudieron leer los datos del enlace:", decodeError);
+    } catch (err) {
+      console.error("Error al leer la invitación:", err);
 
       setUrlError(
-        "No pudimos reconocer los datos personalizados de esta invitación."
+        "No pudimos leer los datos personalizados del enlace. Solicita un enlace nuevo."
       );
 
       setDatosDesdeGenerador(false);
@@ -542,70 +324,67 @@ const Confirmacion = () => {
   }, []);
 
   /* =========================================
-     AJUSTAR ASISTENTES SEGÚN ASISTENCIA
+     PASES DISPONIBLES
   ========================================= */
 
-  useEffect(() => {
-    if (asistencia === "No podré asistir") {
+  const availablePasses = useMemo(
+    () =>
+      Array.from(
+        { length: pasesAsignados },
+        (_, index) => index + 1
+      ),
+    [pasesAsignados]
+  );
+
+  const cambiarAsistencia = (valor) => {
+    setAsistencia(valor);
+    setError("");
+    setAviso("");
+
+    if (valor === "No podré asistir") {
       setInvitados(0);
-      return;
+    } else {
+      setInvitados((actual) =>
+        actual >= 1 && actual <= pasesAsignados
+          ? actual
+          : pasesAsignados
+      );
     }
-
-    if (asistencia === "Sí asistiré" && invitados < 1) {
-      setInvitados(1);
-    }
-  }, [asistencia, invitados]);
-
-  const availablePasses = useMemo(() => {
-    return Array.from(
-      {
-        length: pasesAsignados,
-      },
-      (_, index) => index + 1
-    );
-  }, [pasesAsignados]);
+  };
 
   /* =========================================
      MENSAJE DE WHATSAPP
   ========================================= */
 
-  const createWhatsAppMessage = (recipientName) => {
-    const attendanceText =
+  const crearMensajeWhatsApp = (destinatario) => {
+    const cantidad =
+      asistencia === "Sí asistiré" ? invitados : 0;
+
+    const textoAsistencia =
       asistencia === "Sí asistiré"
-        ? `Sí asistiré con ${invitados} ${
-            invitados === 1 ? "persona" : "personas"
+        ? `Confirmo mi asistencia con ${cantidad} ${
+            cantidad === 1 ? "persona" : "personas"
           }.`
         : "Lamentablemente no podré asistir.";
 
-    const optionalMessage = mensajeInvitado.trim()
-      ? `\n\nMensaje: ${mensajeInvitado.trim()}`
-      : "";
-
     return [
-      `Hola ${recipientName}.`,
+      `Hola ${destinatario} 👋`,
       "",
-      `Soy ${nombreInvitado.trim()}.`,
-      attendanceText,
-      optionalMessage,
+      "Quiero confirmar mi asistencia a su boda.",
       "",
-      "Gracias por la invitación.",
-    ]
-      .join("\n")
-      .replace(/\n{3,}/g, "\n\n");
-  };
-
-  const openWhatsApp = (phoneNumber, recipientName) => {
-    const message = createWhatsAppMessage(recipientName);
-
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
-
-    window.location.href = whatsappUrl;
+      `Nombre: ${nombreInvitado.trim()}`,
+      `Pases asignados: ${pasesAsignados}`,
+      `Confirmación: ${textoAsistencia}`,
+      ...(mensajeInvitado.trim()
+        ? ["", `Mensaje: ${mensajeInvitado.trim()}`]
+        : []),
+      "",
+      "¡Muchas gracias por la invitación! ❤️",
+    ].join("\n");
   };
 
   /* =========================================
-     ENVIAR CONFIRMACIÓN
+     VALIDAR Y CONFIRMAR
   ========================================= */
 
   const enviarConfirmacion = async ({
@@ -616,7 +395,7 @@ const Confirmacion = () => {
     if (loadingSide) return;
 
     if (!nombreInvitado.trim()) {
-      setError("Escribe el nombre del invitado.");
+      setError("Por favor, escribe el nombre del invitado.");
       return;
     }
 
@@ -630,18 +409,18 @@ const Confirmacion = () => {
       (invitados < 1 || invitados > pasesAsignados)
     ) {
       setError(
-        `Puedes confirmar entre 1 y ${pasesAsignados} ${
-          pasesAsignados === 1 ? "lugar" : "lugares"
+        `Solo puedes confirmar entre 1 y ${pasesAsignados} ${
+          pasesAsignados === 1 ? "persona" : "personas"
         }.`
       );
       return;
     }
 
     setError("");
-    setEnviado(false);
+    setAviso("");
     setLoadingSide(side);
 
-    const confirmationData = {
+    const datosConfirmacion = {
       nombre: nombreInvitado.trim(),
       asistencia,
       invitados: asistencia === "Sí asistiré" ? invitados : 0,
@@ -650,39 +429,60 @@ const Confirmacion = () => {
       pasesAsignados,
     };
 
+    const mensajeWhatsApp = crearMensajeWhatsApp(recipientName);
+
+    const whatsappUrl =
+      `https://wa.me/${phoneNumber}?text=` +
+      encodeURIComponent(mensajeWhatsApp);
+
+    /*
+      Abrimos una pestaña desde el clic del usuario
+      para reducir los bloqueos de ventanas emergentes.
+    */
+    const whatsappWindow = window.open(
+      "about:blank",
+      "_blank"
+    );
+
+    let solicitudEnviada = false;
+
     try {
       /*
-        No agregamos Content-Type: application/json porque la petición
-        utiliza mode: "no-cors".
+        Se conserva el formato del envío original
+        para el Google Apps Script existente.
 
-        Apps Script puede leer el contenido mediante:
-        e.postData.contents
+        IMPORTANTE:
+        Con mode: "no-cors" no podemos comprobar
+        que Google Sheets guardó la fila.
       */
 
       await fetch(API_URL, {
         method: "POST",
         mode: "no-cors",
-        body: JSON.stringify(confirmationData),
+        body: JSON.stringify(datosConfirmacion),
       });
 
-      setEnviado(true);
+      solicitudEnviada = true;
+    } catch (err) {
+      console.error("Error al contactar Google Sheets:", err);
+    }
 
-      /*
-        Conservamos nombre y pases porque vienen del generador.
-        Solo limpiamos la respuesta y el mensaje.
-      */
-
-      window.setTimeout(() => {
-        openWhatsApp(phoneNumber, recipientName);
-      }, 650);
-    } catch (requestError) {
-      console.error("Error enviando la confirmación:", requestError);
-
-      setError(
-        "No pudimos enviar tu confirmación. Intenta nuevamente en unos momentos."
+    if (solicitudEnviada) {
+      setAviso(
+        "Se envió la solicitud de registro. Completa tu confirmación enviando el mensaje por WhatsApp."
       );
+    } else {
+      setAviso(
+        "No pudimos contactar la hoja de respuestas. Envía tu confirmación por WhatsApp."
+      );
+    }
 
-      setLoadingSide("");
+    setLoadingSide("");
+
+    if (whatsappWindow && !whatsappWindow.closed) {
+      whatsappWindow.location.replace(whatsappUrl);
+    } else {
+      window.location.href = whatsappUrl;
     }
   };
 
@@ -695,256 +495,101 @@ const Confirmacion = () => {
       variants={fadeUp}
       initial="hidden"
       whileInView="show"
-      viewport={{
-        once: true,
-        amount: 0.08,
-      }}
+      viewport={{ once: true, amount: 0.08 }}
       className="
-        relative
-        flex
-        min-h-[820px]
-        w-full
-        items-center
-        justify-center
-        overflow-hidden
-        px-5
-        py-24
-        sm:px-8
-        sm:py-28
-        lg:px-12
-        lg:py-32
+        relative flex min-h-[820px] w-full
+        items-center justify-center overflow-hidden
+        px-5 py-24 sm:px-8 sm:py-28
+        lg:px-12 lg:py-32
       "
       style={{
-        background: `
-          linear-gradient(
-            180deg,
-            ${palette.paperLight} 0%,
-            ${palette.paper} 56%,
-            ${palette.paperDark} 100%
-          )
-        `,
+        backgroundColor: palette.ink,
       }}
     >
-      {/* TEXTURA */}
+      {/* MARCO EXTERIOR */}
 
       <div
+        aria-hidden="true"
         className="
-          pointer-events-none
-          absolute
-          inset-0
-          opacity-[0.16]
+          pointer-events-none absolute inset-5
+          border border-[#A48654]/40
+          sm:inset-8 lg:inset-10
         "
-        style={{
-          backgroundImage: `
-            repeating-linear-gradient(
-              0deg,
-              rgba(29,39,51,0.025) 0px,
-              rgba(29,39,51,0.025) 1px,
-              transparent 1px,
-              transparent 5px
-            )
-          `,
-        }}
       />
 
-      {/* MARCOS */}
+      {/* MARCO INTERIOR */}
 
       <div
+        aria-hidden="true"
         className="
-          pointer-events-none
-          absolute
-          inset-5
-          border
-          sm:inset-8
-          lg:inset-10
+          pointer-events-none absolute inset-[26px]
+          border border-[#A48654]/15
+          sm:inset-[38px] lg:inset-[46px]
         "
-        style={{
-          borderColor: "rgba(164,134,84,0.25)",
-        }}
-      />
-
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-[26px]
-          border
-          sm:inset-[38px]
-          lg:inset-[46px]
-        "
-        style={{
-          borderColor: "rgba(164,134,84,0.1)",
-        }}
       />
 
       {/* ESQUINAS */}
 
       <CornerOrnament
         className="
-          pointer-events-none
-          absolute
-          left-6
-          top-6
-          h-16
-          w-16
-          text-[#A48654]/25
-          sm:left-9
-          sm:top-9
-          sm:h-20
-          sm:w-20
+          pointer-events-none absolute left-6 top-6
+          h-16 w-16 text-[#A48654]/45
+          sm:left-9 sm:top-9 sm:h-20 sm:w-20
         "
       />
 
       <CornerOrnament
         className="
-          pointer-events-none
-          absolute
-          right-6
-          top-6
-          h-16
-          w-16
-          rotate-90
-          text-[#A48654]/25
-          sm:right-9
-          sm:top-9
-          sm:h-20
-          sm:w-20
+          pointer-events-none absolute right-6 top-6
+          h-16 w-16 rotate-90 text-[#A48654]/45
+          sm:right-9 sm:top-9 sm:h-20 sm:w-20
         "
       />
 
       <CornerOrnament
         className="
-          pointer-events-none
-          absolute
-          bottom-6
-          left-6
-          h-16
-          w-16
-          -rotate-90
-          text-[#A48654]/25
-          sm:bottom-9
-          sm:left-9
-          sm:h-20
-          sm:w-20
+          pointer-events-none absolute bottom-6 left-6
+          h-16 w-16 -rotate-90 text-[#A48654]/45
+          sm:bottom-9 sm:left-9 sm:h-20 sm:w-20
         "
       />
 
       <CornerOrnament
         className="
-          pointer-events-none
-          absolute
-          bottom-6
-          right-6
-          h-16
-          w-16
-          rotate-180
-          text-[#A48654]/25
-          sm:bottom-9
-          sm:right-9
-          sm:h-20
-          sm:w-20
+          pointer-events-none absolute bottom-6 right-6
+          h-16 w-16 rotate-180 text-[#A48654]/45
+          sm:bottom-9 sm:right-9 sm:h-20 sm:w-20
         "
       />
 
-      {/* RAMAS */}
+      {/* CONTENIDO */}
 
-      <BotanicalBranch
-        className="
-          pointer-events-none
-          absolute
-          -bottom-16
-          -left-8
-          h-[250px]
-          w-[145px]
-          -rotate-12
-          text-[#A48654]/10
-          sm:h-[310px]
-          sm:w-[180px]
-          lg:left-2
-        "
-      />
-
-      <BotanicalBranch
-        className="
-          pointer-events-none
-          absolute
-          -right-8
-          -top-16
-          h-[250px]
-          w-[145px]
-          rotate-[168deg]
-          text-[#A48654]/10
-          sm:h-[310px]
-          sm:w-[180px]
-          lg:right-2
-        "
-      />
-
-      <div
-        className="
-          relative
-          z-10
-          mx-auto
-          w-full
-          max-w-5xl
-        "
-      >
+      <div className="relative z-10 mx-auto w-full max-w-5xl">
         {/* ENCABEZADO */}
 
-        <motion.div
+        <motion.header
+          variants={fadeUp}
           className="
-            mx-auto
-            mb-12
-            flex
-            max-w-3xl
-            flex-col
-            items-center
-            text-center
-            sm:mb-16
+            mx-auto mb-12 flex max-w-3xl
+            flex-col items-center text-center sm:mb-16
           "
-          initial={{
-            opacity: 0,
-            y: 16,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 0.9,
-          }}
         >
           <div
             className="
-              flex
-              h-16
-              w-16
-              items-center
-              justify-center
-              rounded-full
-              border
+              flex h-16 w-16 items-center justify-center
+              rounded-full border border-[#A48654]/60
+              text-[#D7C49F]
             "
-            style={{
-              color: palette.antiqueGoldDark,
-              borderColor: "rgba(164,134,84,0.42)",
-            }}
           >
             <EnvelopeIcon />
           </div>
 
           <p
             className="
-              mt-7
-              text-[8px]
-              uppercase
-              tracking-[0.44em]
+              mt-7 text-[9px] uppercase
+              tracking-[0.35em] text-[#D7C49F]
               sm:text-[10px]
-              sm:tracking-[0.55em]
             "
-            style={{
-              color: palette.antiqueGoldDark,
-            }}
           >
             Nos encantará contar contigo
           </p>
@@ -955,108 +600,58 @@ const Confirmacion = () => {
 
           <h2
             className="
-              mt-7
-              font-serif
-              text-[39px]
-              font-normal
-              leading-tight
-              tracking-[-0.025em]
-              sm:text-[54px]
-              md:text-[64px]
+              mt-7 font-serif text-[39px]
+              font-normal leading-tight text-[#FBF9F4]
+              sm:text-[54px] md:text-[64px]
             "
-            style={{
-              color: palette.ink,
-            }}
           >
             Confirmación de asistencia
           </h2>
 
           <p
             className="
-              mx-auto
-              mt-5
-              max-w-2xl
-              font-serif
-              text-[14px]
-              italic
-              leading-7
-              sm:text-base
+              mx-auto mt-5 max-w-2xl font-serif
+              text-sm italic leading-7
+              text-[#E5DED2] sm:text-base
             "
-            style={{
-              color: palette.warmGray,
-            }}
           >
-            Por favor, confirma tu asistencia y ayúdanos a preparar cada
-            detalle de nuestra celebración.
+            Por favor, confirma tu asistencia y ayúdanos
+            a preparar cada detalle de nuestra celebración.
           </p>
-        </motion.div>
+        </motion.header>
 
         {/* FORMULARIO */}
 
         <motion.div
+          variants={fadeUp}
           className="
-            relative
-            mx-auto
-            w-full
-            max-w-3xl
-            border
-            px-6
-            py-12
-            sm:px-10
-            sm:py-14
+            relative mx-auto w-full max-w-3xl
+            border border-[#A48654]/50
+            bg-[#FBF9F4]
+            px-6 py-12
+            sm:px-10 sm:py-14
             md:px-14
           "
-          style={{
-            backgroundColor: "rgba(251,249,244,0.84)",
-            borderColor: "rgba(164,134,84,0.34)",
-            boxShadow: "0 24px 65px rgba(29,39,51,0.08)",
-          }}
-          initial={{
-            opacity: 0,
-            y: 22,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.12,
-          }}
-          transition={{
-            duration: 0.95,
-            delay: 0.12,
-            ease: [0.22, 1, 0.36, 1],
-          }}
         >
           <div
+            aria-hidden="true"
             className="
-              pointer-events-none
-              absolute
-              inset-[7px]
-              border
+              pointer-events-none absolute inset-[7px]
+              border border-[#A48654]/20
             "
-            style={{
-              borderColor: "rgba(164,134,84,0.12)",
-            }}
           />
 
           <div className="relative z-10">
             {/* NOMBRE */}
 
             <div>
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <label
                   htmlFor="confirmation-name"
                   className="
-                    text-[8px]
-                    uppercase
-                    tracking-[0.34em]
-                    sm:text-[9px]
+                    text-[9px] uppercase tracking-[0.28em]
+                    text-[#725B37]
                   "
-                  style={{
-                    color: palette.antiqueGoldDark,
-                  }}
                 >
                   Nombre del invitado
                 </label>
@@ -1064,17 +659,9 @@ const Confirmacion = () => {
                 {datosDesdeGenerador && (
                   <span
                     className="
-                      inline-flex
-                      items-center
-                      gap-2
-                      text-[7px]
-                      uppercase
-                      tracking-[0.22em]
-                      sm:text-[8px]
+                      inline-flex items-center gap-2
+                      text-[9px] text-[#777168]
                     "
-                    style={{
-                      color: palette.warmGray,
-                    }}
                   >
                     <LockIcon />
                     Invitación personalizada
@@ -1095,46 +682,21 @@ const Confirmacion = () => {
                 placeholder="Nombre y apellido"
                 autoComplete="name"
                 className="
-                  mt-4
-                  w-full
-                  border
-                  bg-[#FBF9F4]
-                  px-5
-                  py-4
-                  font-serif
-                  text-base
-                  outline-none
+                  mt-4 w-full border border-[#A48654]/40
+                  bg-white px-5 py-4
+                  font-serif text-base text-[#1D2733]
+                  outline-none focus:border-[#A48654]
                   sm:text-lg
                 "
-                style={{
-                  color: palette.ink,
-                  borderColor: "rgba(164,134,84,0.34)",
-                  cursor: datosDesdeGenerador ? "not-allowed" : "text",
-                }}
               />
 
               <AnimatePresence>
                 {urlError && (
                   <motion.p
-                    className="
-                      mt-3
-                      text-[12px]
-                      leading-5
-                    "
-                    style={{
-                      color: palette.error,
-                    }}
-                    initial={{
-                      opacity: 0,
-                      y: 4,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    exit={{
-                      opacity: 0,
-                    }}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="mt-3 text-xs leading-6 text-[#A33F3F]"
                   >
                     {urlError}
                   </motion.p>
@@ -1144,42 +706,21 @@ const Confirmacion = () => {
 
             {/* ASISTENCIA */}
 
-            <div
-              className="
-                mt-9
-                border-t
-                pt-9
-              "
-              style={{
-                borderColor: "rgba(164,134,84,0.26)",
-              }}
-            >
+            <div className="mt-9 border-t border-[#A48654]/30 pt-9">
               <p
                 className="
-                  text-[8px]
-                  uppercase
-                  tracking-[0.34em]
-                  sm:text-[9px]
+                  text-[9px] uppercase tracking-[0.28em]
+                  text-[#725B37]
                 "
-                style={{
-                  color: palette.antiqueGoldDark,
-                }}
               >
                 ¿Podrás acompañarnos?
               </p>
 
-              <div
-                className="
-                  mt-5
-                  grid
-                  gap-3
-                  sm:grid-cols-2
-                "
-              >
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 <AttendanceOption
                   value="Sí asistiré"
                   selectedValue={asistencia}
-                  onChange={setAsistencia}
+                  onChange={cambiarAsistencia}
                   title="Sí asistiré"
                   description="Será un gusto celebrar juntos."
                 />
@@ -1187,7 +728,7 @@ const Confirmacion = () => {
                 <AttendanceOption
                   value="No podré asistir"
                   selectedValue={asistencia}
-                  onChange={setAsistencia}
+                  onChange={cambiarAsistencia}
                   title="No podré asistir"
                   description="Agradecemos que nos lo hagas saber."
                 />
@@ -1199,135 +740,87 @@ const Confirmacion = () => {
             <AnimatePresence>
               {asistencia === "Sí asistiré" && (
                 <motion.div
-                  className="
-                    mt-9
-                    border-t
-                    pt-9
-                  "
-                  style={{
-                    borderColor: "rgba(164,134,84,0.26)",
-                  }}
-                  initial={{
-                    opacity: 0,
-                    height: 0,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    height: "auto",
-                  }}
-                  exit={{
-                    opacity: 0,
-                    height: 0,
-                  }}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <label
-                      htmlFor="confirmation-passes"
+                  <div className="mt-9 border-t border-[#A48654]/30 pt-9">
+                    <div
                       className="
-                        text-[8px]
-                        uppercase
-                        tracking-[0.34em]
-                        sm:text-[9px]
+                        flex flex-wrap items-center
+                        justify-between gap-3
                       "
-                      style={{
-                        color: palette.antiqueGoldDark,
-                      }}
                     >
-                      Personas que asistirán
-                    </label>
+                      <label
+                        htmlFor="confirmation-passes"
+                        className="
+                          text-[9px] uppercase
+                          tracking-[0.28em] text-[#725B37]
+                        "
+                      >
+                        Personas que asistirán
+                      </label>
 
-                    <span
+                      <span
+                        className="
+                          text-[10px] uppercase
+                          tracking-[0.12em] text-[#777168]
+                        "
+                      >
+                        Máximo {pasesAsignados}
+                      </span>
+                    </div>
+
+                    <select
+                      id="confirmation-passes"
+                      value={invitados}
+                      onChange={(event) =>
+                        setInvitados(Number(event.target.value))
+                      }
                       className="
-                        text-[8px]
-                        uppercase
-                        tracking-[0.2em]
+                        mt-4 w-full appearance-none
+                        border border-[#A48654]/40
+                        bg-white px-5 py-4
+                        text-center font-serif text-base
+                        text-[#1D2733] outline-none
+                        focus:border-[#A48654]
+                        sm:text-lg
                       "
-                      style={{
-                        color: palette.warmGray,
-                      }}
                     >
-                      Máximo {pasesAsignados}
-                    </span>
+                      {availablePasses.map((numero) => (
+                        <option key={numero} value={numero}>
+                          {numero}{" "}
+                          {numero === 1 ? "persona" : "personas"}
+                        </option>
+                      ))}
+                    </select>
+
+                    <p
+                      className="
+                        mt-3 text-center font-serif
+                        text-xs italic text-[#777168]
+                      "
+                    >
+                      Esta invitación tiene{" "}
+                      {pasesAsignados === 1
+                        ? "1 lugar reservado"
+                        : `${pasesAsignados} lugares reservados`}.
+                    </p>
                   </div>
-
-                  <select
-                    id="confirmation-passes"
-                    value={invitados}
-                    onChange={(event) =>
-                      setInvitados(Number(event.target.value))
-                    }
-                    className="
-                      mt-4
-                      w-full
-                      appearance-none
-                      border
-                      bg-[#FBF9F4]
-                      px-5
-                      py-4
-                      text-center
-                      font-serif
-                      text-base
-                      outline-none
-                      sm:text-lg
-                    "
-                    style={{
-                      color: palette.ink,
-                      borderColor: "rgba(164,134,84,0.34)",
-                    }}
-                  >
-                    {availablePasses.map((passNumber) => (
-                      <option key={passNumber} value={passNumber}>
-                        {passNumber}{" "}
-                        {passNumber === 1 ? "persona" : "personas"}
-                      </option>
-                    ))}
-                  </select>
-
-                  <p
-                    className="
-                      mt-3
-                      text-center
-                      font-serif
-                      text-[12px]
-                      italic
-                      sm:text-[13px]
-                    "
-                    style={{
-                      color: palette.warmGray,
-                    }}
-                  >
-                    Esta invitación tiene{" "}
-                    {pasesAsignados === 1
-                      ? "1 lugar reservado"
-                      : `${pasesAsignados} lugares reservados`}.
-                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
 
             {/* MENSAJE */}
 
-            <div
-              className="
-                mt-9
-                border-t
-                pt-9
-              "
-              style={{
-                borderColor: "rgba(164,134,84,0.26)",
-              }}
-            >
+            <div className="mt-9 border-t border-[#A48654]/30 pt-9">
               <label
                 htmlFor="confirmation-message"
                 className="
-                  text-[8px]
-                  uppercase
-                  tracking-[0.34em]
-                  sm:text-[9px]
+                  text-[9px] uppercase tracking-[0.28em]
+                  text-[#725B37]
                 "
-                style={{
-                  color: palette.antiqueGoldDark,
-                }}
               >
                 Mensaje para los novios
               </label>
@@ -1342,128 +835,66 @@ const Confirmacion = () => {
                 rows={4}
                 maxLength={500}
                 className="
-                  mt-4
-                  w-full
-                  resize-none
-                  border
-                  bg-[#FBF9F4]
-                  px-5
-                  py-4
-                  font-serif
-                  text-[14px]
-                  leading-7
-                  outline-none
-                  sm:text-[15px]
+                  mt-4 w-full resize-none
+                  border border-[#A48654]/40
+                  bg-white px-5 py-4
+                  font-serif text-sm leading-7
+                  text-[#1D2733] outline-none
+                  focus:border-[#A48654]
+                  sm:text-base
                 "
-                style={{
-                  color: palette.ink,
-                  borderColor: "rgba(164,134,84,0.34)",
-                }}
               />
 
-              <p
-                className="
-                  mt-2
-                  text-right
-                  text-[10px]
-                "
-                style={{
-                  color: palette.warmGray,
-                }}
-              >
+              <p className="mt-2 text-right text-[10px] text-[#777168]">
                 {mensajeInvitado.length}/500
               </p>
             </div>
 
-            {/* MENSAJES */}
+            {/* ERRORES Y AVISOS */}
 
             <AnimatePresence mode="wait">
               {error && (
-                <motion.div
-                  key="confirmation-error"
+                <motion.p
+                  key="error"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  role="alert"
                   className="
-                    mt-7
-                    border
-                    px-4
-                    py-3
-                    text-center
-                    font-serif
-                    text-[13px]
-                    sm:text-[14px]
+                    mt-7 border border-[#A33F3F]/30
+                    px-4 py-3 text-center
+                    font-serif text-sm text-[#A33F3F]
                   "
-                  style={{
-                    color: palette.error,
-                    borderColor: "rgba(139,58,58,0.3)",
-                    backgroundColor: "rgba(139,58,58,0.045)",
-                  }}
-                  initial={{
-                    opacity: 0,
-                    y: 5,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                  }}
                 >
                   {error}
-                </motion.div>
+                </motion.p>
               )}
 
-              {enviado && !error && (
-                <motion.div
-                  key="confirmation-success"
+              {!error && aviso && (
+                <motion.p
+                  key="aviso"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  role="status"
                   className="
-                    mt-7
-                    flex
-                    items-center
-                    justify-center
-                    gap-3
-                    border
-                    px-4
-                    py-3
-                    text-center
-                    font-serif
-                    text-[13px]
-                    sm:text-[14px]
+                    mt-7 border border-[#A48654]/40
+                    px-4 py-3 text-center
+                    font-serif text-sm leading-6
+                    text-[#39434D]
                   "
-                  style={{
-                    color: palette.success,
-                    borderColor: "rgba(73,100,77,0.3)",
-                    backgroundColor: "rgba(73,100,77,0.05)",
-                  }}
-                  initial={{
-                    opacity: 0,
-                    y: 5,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                  }}
                 >
-                  <CheckIcon />
-                  Confirmación registrada. Abriendo WhatsApp…
-                </motion.div>
+                  {aviso}
+                </motion.p>
               )}
             </AnimatePresence>
 
-            {/* BOTONES */}
+            {/* BOTONES DE CONFIRMACIÓN */}
 
-            <div
-              className="
-                mt-9
-                grid
-                gap-3
-                sm:grid-cols-2
-              "
-            >
+            <div className="mt-9 grid gap-3 sm:grid-cols-2">
               <motion.button
                 type="button"
+                disabled={Boolean(loadingSide)}
                 onClick={() =>
                   enviarConfirmacion({
                     side: "Novia",
@@ -1471,72 +902,35 @@ const Confirmacion = () => {
                     recipientName: NOMBRE_NOVIA,
                   })
                 }
-                disabled={Boolean(loadingSide)}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.985 }}
                 className="
-                  inline-flex
-                  min-h-[58px]
-                  items-center
-                  justify-center
-                  gap-3
-                  border
-                  px-5
-                  py-4
+                  inline-flex min-h-[60px]
+                  items-center justify-center gap-3
+                  border border-[#1D2733]
+                  bg-[#1D2733] px-5 py-4
+                  text-[#FBF9F4]
                   disabled:cursor-not-allowed
                   disabled:opacity-60
                 "
-                style={{
-                  backgroundColor: palette.ink,
-                  borderColor: palette.ink,
-                  color: palette.paperLight,
-                }}
-                whileHover={
-                  loadingSide
-                    ? undefined
-                    : {
-                        y: -2,
-                        backgroundColor: palette.inkSoft,
-                      }
-                }
-                whileTap={
-                  loadingSide
-                    ? undefined
-                    : {
-                        scale: 0.985,
-                      }
-                }
               >
-                {loadingSide === "Novia" ? (
-                  <span
-                    className="
-                      h-4
-                      w-4
-                      animate-spin
-                      rounded-full
-                      border-2
-                      border-white/35
-                      border-t-white
-                    "
-                  />
-                ) : (
-                  <WhatsAppIcon />
-                )}
+                <WhatsAppIcon />
 
                 <span
                   className="
-                    text-[8px]
-                    uppercase
-                    tracking-[0.24em]
-                    sm:text-[9px]
+                    text-[10px] uppercase
+                    tracking-[0.16em]
                   "
                 >
                   {loadingSide === "Novia"
-                    ? "Enviando"
+                    ? "Preparando confirmación..."
                     : `Confirmar con ${NOMBRE_NOVIA}`}
                 </span>
               </motion.button>
 
               <motion.button
                 type="button"
+                disabled={Boolean(loadingSide)}
                 onClick={() =>
                   enviarConfirmacion({
                     side: "Novio",
@@ -1544,95 +938,71 @@ const Confirmacion = () => {
                     recipientName: NOMBRE_NOVIO,
                   })
                 }
-                disabled={Boolean(loadingSide)}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.985 }}
                 className="
-                  inline-flex
-                  min-h-[58px]
-                  items-center
-                  justify-center
-                  gap-3
-                  border
-                  px-5
-                  py-4
+                  inline-flex min-h-[60px]
+                  items-center justify-center gap-3
+                  border border-[#1D2733]
+                  bg-[#FBF9F4] px-5 py-4
+                  text-[#1D2733]
                   disabled:cursor-not-allowed
                   disabled:opacity-60
                 "
-                style={{
-                  backgroundColor: palette.paperLight,
-                  borderColor: palette.ink,
-                  color: palette.ink,
-                }}
-                whileHover={
-                  loadingSide
-                    ? undefined
-                    : {
-                        y: -2,
-                        backgroundColor: palette.paper,
-                      }
-                }
-                whileTap={
-                  loadingSide
-                    ? undefined
-                    : {
-                        scale: 0.985,
-                      }
-                }
               >
-                {loadingSide === "Novio" ? (
-                  <span
-                    className="
-                      h-4
-                      w-4
-                      animate-spin
-                      rounded-full
-                      border-2
-                      border-[#1D2733]/25
-                      border-t-[#1D2733]
-                    "
-                  />
-                ) : (
-                  <WhatsAppIcon />
-                )}
+                <WhatsAppIcon />
 
                 <span
                   className="
-                    text-[8px]
-                    uppercase
-                    tracking-[0.24em]
-                    sm:text-[9px]
+                    text-[10px] uppercase
+                    tracking-[0.16em]
                   "
                 >
                   {loadingSide === "Novio"
-                    ? "Enviando"
+                    ? "Preparando confirmación..."
                     : `Confirmar con ${NOMBRE_NOVIO}`}
                 </span>
               </motion.button>
             </div>
 
+            {/* NOTA FINAL */}
+
             <p
               className="
-                mx-auto
-                mt-6
-                max-w-xl
-                text-center
-                font-serif
-                text-[12px]
-                italic
-                leading-6
+                mx-auto mt-7 max-w-xl text-center
+                font-serif text-xs italic
+                leading-6 text-[#777168]
                 sm:text-[13px]
               "
-              style={{
-                color: palette.warmGray,
-              }}
             >
-              Al confirmar, registraremos tu respuesta y te dirigiremos a
-              WhatsApp para enviar el mensaje correspondiente.
+              Al confirmar, enviaremos tu respuesta a nuestra
+              lista de asistencia y abriremos WhatsApp para que
+              puedas enviar tu mensaje a los novios.
             </p>
+          </div>
+        </motion.div>
+
+        {/* CIERRE */}
+
+        <motion.div
+          variants={fadeUp}
+          className="mx-auto mt-14 max-w-2xl text-center"
+        >
+          <p
+            className="
+              font-serif text-xl italic
+              leading-8 text-[#FBF9F4]
+              sm:text-2xl
+            "
+          >
+            Será un honor compartir este día contigo.
+          </p>
+
+          <div className="mt-7">
+            <DecorativeDivider />
           </div>
         </motion.div>
       </div>
     </motion.section>
   );
-};
-
-export default Confirmacion;
+}

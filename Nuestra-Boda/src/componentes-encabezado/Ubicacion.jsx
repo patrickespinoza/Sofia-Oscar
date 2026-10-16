@@ -1,18 +1,23 @@
+
 import { motion } from "framer-motion";
 
 /* =========================================
    EVENTO Y DIRECCIONES
+   ESTILO EDITORIAL CHAMPAGNE
 ========================================= */
 
 const palette = {
   ink: "#1D2733",
-  inkSoft: "#39434D",
+  inkSoft: "#35404B",
   paper: "#F5F1E8",
   paperLight: "#FBF9F4",
-  paperDark: "#E5DED2",
+  paperDark: "#DED6C8",
+  champagne: "#E8E0D2",
+  champagneDeep: "#DCD2C1",
   antiqueGold: "#A48654",
-  antiqueGoldDark: "#725B37",
+  antiqueGoldDark: "#755E39",
   warmGray: "#777168",
+  line: "#C8BDAA",
 };
 
 const eventos = [
@@ -39,6 +44,10 @@ const eventos = [
     aria: "Abrir ubicación de Rancho La Perla en Google Maps",
   },
 ];
+
+/* =========================================
+   ANIMACIONES
+========================================= */
 
 const fadeUp = {
   hidden: {
@@ -194,18 +203,22 @@ function BotanicalBranch({ className = "" }) {
 }
 
 /* =========================================
-   SEPARADOR
+   SEPARADOR DECORATIVO
 ========================================= */
 
 function DecorativeDivider({ compact = false, light = false }) {
   const lineColor = light
-    ? "rgba(251,249,244,0.35)"
+    ? "rgba(164,134,84,0.75)"
     : "rgba(164,134,84,0.72)";
 
   return (
     <div className="flex items-center justify-center gap-3">
       <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
+        className={
+          compact
+            ? "h-px w-8 sm:w-12"
+            : "h-px w-10 sm:w-16"
+        }
         style={{
           background: `linear-gradient(to right, transparent, ${lineColor})`,
         }}
@@ -219,7 +232,11 @@ function DecorativeDivider({ compact = false, light = false }) {
       />
 
       <span
-        className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
+        className={
+          compact
+            ? "h-px w-8 sm:w-12"
+            : "h-px w-10 sm:w-16"
+        }
         style={{
           background: `linear-gradient(to left, transparent, ${lineColor})`,
         }}
@@ -257,19 +274,19 @@ function LocationIcon() {
 function EventCard({ evento, dark = false }) {
   const background = dark
     ? palette.ink
-    : "rgba(251,249,244,0.9)";
+    : palette.paperLight;
 
   const primaryColor = dark
     ? palette.paperLight
     : palette.ink;
 
   const secondaryColor = dark
-    ? "rgba(251,249,244,0.7)"
+    ? "rgba(251,249,244,0.72)"
     : palette.warmGray;
 
   const borderColor = dark
-    ? "rgba(164,134,84,0.48)"
-    : "rgba(164,134,84,0.3)";
+    ? "rgba(164,134,84,0.55)"
+    : "rgba(164,134,84,0.4)";
 
   return (
     <motion.article
@@ -297,25 +314,68 @@ function EventCard({ evento, dark = false }) {
         borderColor,
         boxShadow: dark
           ? "0 24px 55px rgba(29,39,51,0.18)"
-          : "0 20px 50px rgba(29,39,51,0.07)",
+          : "0 20px 50px rgba(29,39,51,0.08)",
       }}
     >
-      {/* Borde interior */}
+      {/* MARCO INTERIOR */}
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-[7px] border"
+        className="
+          pointer-events-none
+          absolute
+          inset-[7px]
+          border
+        "
         style={{
           borderColor: dark
-            ? "rgba(164,134,84,0.2)"
-            : "rgba(164,134,84,0.13)",
+            ? "rgba(164,134,84,0.35)"
+            : "rgba(164,134,84,0.2)",
         }}
       />
 
+      {/* ORNAMENTOS DE ESQUINA */}
 
+      <CornerOrnament
+        className={`
+          pointer-events-none
+          absolute
+          left-4
+          top-4
+          h-12
+          w-12
+          sm:h-16
+          sm:w-16
+          ${
+            dark
+              ? "text-[#A48654]/45"
+              : "text-[#A48654]/35"
+          }
+        `}
+      />
 
+      <CornerOrnament
+        className={`
+          pointer-events-none
+          absolute
+          bottom-4
+          right-4
+          h-12
+          w-12
+          rotate-180
+          sm:h-16
+          sm:w-16
+          ${
+            dark
+              ? "text-[#A48654]/45"
+              : "text-[#A48654]/35"
+          }
+        `}
+      />
 
       <div className="relative z-10 w-full">
+        {/* TIPO DE EVENTO */}
+
         <p
           className="
             text-[8px]
@@ -332,6 +392,8 @@ function EventCard({ evento, dark = false }) {
         >
           {evento.tipo}
         </p>
+
+        {/* TÍTULO */}
 
         <h3
           className="
@@ -353,13 +415,10 @@ function EventCard({ evento, dark = false }) {
         </h3>
 
         <div className="my-7 sm:my-8">
-          <DecorativeDivider
-            compact
-            light={dark}
-          />
+          <DecorativeDivider compact light={dark} />
         </div>
 
-        {/* Hora */}
+        {/* HORA */}
 
         <div>
           <p
@@ -412,7 +471,7 @@ function EventCard({ evento, dark = false }) {
           </div>
         </div>
 
-        {/* Lugar */}
+        {/* LUGAR */}
 
         <div className="mt-9">
           <p
@@ -457,7 +516,7 @@ function EventCard({ evento, dark = false }) {
             "
             style={{
               color: dark
-                ? "rgba(251,249,244,0.58)"
+                ? "rgba(251,249,244,0.65)"
                 : palette.warmGray,
             }}
           >
@@ -465,7 +524,7 @@ function EventCard({ evento, dark = false }) {
           </p>
         </div>
 
-        {/* Botón de ubicación */}
+        {/* BOTÓN DE GOOGLE MAPS */}
 
         <motion.a
           href={evento.ubicacion}
@@ -561,18 +620,23 @@ export default function EventoDireccion() {
         background: `
           linear-gradient(
             180deg,
-            ${palette.paperLight} 0%,
-            ${palette.paper} 58%,
-            ${palette.paperDark} 100%
+            ${palette.champagne} 0%,
+            ${palette.paperDark} 52%,
+            ${palette.champagneDeep} 100%
           )
         `,
       }}
     >
-      {/* Textura de papel */}
+      {/* TEXTURA DE PAPEL */}
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.16]"
+        className="
+          pointer-events-none
+          absolute
+          inset-0
+          opacity-[0.16]
+        "
         style={{
           backgroundImage: `
             repeating-linear-gradient(
@@ -586,7 +650,7 @@ export default function EventoDireccion() {
         }}
       />
 
-      {/* Marcos generales */}
+      {/* MARCOS GENERALES */}
 
       <div
         aria-hidden="true"
@@ -599,7 +663,7 @@ export default function EventoDireccion() {
           lg:inset-10
         "
         style={{
-          borderColor: "rgba(164,134,84,0.25)",
+          borderColor: "rgba(164,134,84,0.35)",
         }}
       />
 
@@ -614,11 +678,11 @@ export default function EventoDireccion() {
           lg:inset-[46px]
         "
         style={{
-          borderColor: "rgba(164,134,84,0.1)",
+          borderColor: "rgba(164,134,84,0.14)",
         }}
       />
 
-      {/* Ornamentos de esquina */}
+      {/* ORNAMENTOS DE ESQUINA */}
 
       <CornerOrnament
         className="
@@ -628,7 +692,7 @@ export default function EventoDireccion() {
           top-6
           h-16
           w-16
-          text-[#A48654]/25
+          text-[#A48654]/40
           sm:left-9
           sm:top-9
           sm:h-20
@@ -645,7 +709,7 @@ export default function EventoDireccion() {
           h-16
           w-16
           rotate-90
-          text-[#A48654]/25
+          text-[#A48654]/40
           sm:right-9
           sm:top-9
           sm:h-20
@@ -662,7 +726,7 @@ export default function EventoDireccion() {
           h-16
           w-16
           -rotate-90
-          text-[#A48654]/25
+          text-[#A48654]/40
           sm:bottom-9
           sm:left-9
           sm:h-20
@@ -679,7 +743,7 @@ export default function EventoDireccion() {
           h-16
           w-16
           rotate-180
-          text-[#A48654]/25
+          text-[#A48654]/40
           sm:bottom-9
           sm:right-9
           sm:h-20
@@ -687,7 +751,7 @@ export default function EventoDireccion() {
         "
       />
 
-      {/* Ramas decorativas */}
+      {/* RAMAS BOTÁNICAS */}
 
       <BotanicalBranch
         className="
@@ -698,7 +762,7 @@ export default function EventoDireccion() {
           h-[250px]
           w-[145px]
           -rotate-12
-          text-[#A48654]/10
+          text-[#A48654]/20
           sm:h-[310px]
           sm:w-[180px]
           lg:left-2
@@ -714,15 +778,23 @@ export default function EventoDireccion() {
           h-[250px]
           w-[145px]
           rotate-[168deg]
-          text-[#A48654]/10
+          text-[#A48654]/20
           sm:h-[310px]
           sm:w-[180px]
           lg:right-2
         "
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl">
-        {/* Encabezado */}
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          w-full
+          max-w-6xl
+        "
+      >
+        {/* ENCABEZADO */}
 
         <motion.header
           initial={{
@@ -804,7 +876,7 @@ export default function EventoDireccion() {
           </p>
         </motion.header>
 
-        {/* Fecha principal */}
+        {/* FECHA PRINCIPAL */}
 
         <motion.div
           initial={{
@@ -834,16 +906,21 @@ export default function EventoDireccion() {
             sm:py-14
           "
           style={{
-            backgroundColor: "rgba(251,249,244,0.82)",
-            borderColor: "rgba(164,134,84,0.34)",
+            backgroundColor: palette.paperLight,
+            borderColor: "rgba(164,134,84,0.4)",
             boxShadow: "0 20px 50px rgba(29,39,51,0.07)",
           }}
         >
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-[7px] border"
+            className="
+              pointer-events-none
+              absolute
+              inset-[7px]
+              border
+            "
             style={{
-              borderColor: "rgba(164,134,84,0.12)",
+              borderColor: "rgba(164,134,84,0.18)",
             }}
           />
 
@@ -974,7 +1051,7 @@ export default function EventoDireccion() {
           </div>
         </motion.div>
 
-        {/* Dos ubicaciones */}
+        {/* DOS UBICACIONES */}
 
         <motion.div
           variants={containerAnimation}
@@ -984,7 +1061,12 @@ export default function EventoDireccion() {
             once: true,
             amount: 0.1,
           }}
-          className="grid gap-6 lg:grid-cols-2 lg:gap-8"
+          className="
+            grid
+            gap-6
+            lg:grid-cols-2
+            lg:gap-8
+          "
         >
           {eventos.map((evento, index) => (
             <EventCard
@@ -995,7 +1077,7 @@ export default function EventoDireccion() {
           ))}
         </motion.div>
 
-        {/* Cierre */}
+        {/* MENSAJE FINAL */}
 
         <motion.p
           initial={{
@@ -1024,7 +1106,7 @@ export default function EventoDireccion() {
             sm:text-base
           "
           style={{
-            color: palette.warmGray,
+            color: palette.inkSoft,
           }}
         >
           Esperamos contar con su presencia en un día que guardaremos para

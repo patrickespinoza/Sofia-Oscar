@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 
 const Countdown = ({ targetDate }) => {
   const calculateTime = () => {
@@ -14,6 +14,7 @@ const Countdown = ({ targetDate }) => {
         seg: Math.floor((difference / 1000) % 60),
       };
     }
+
     return timeLeft;
   };
 
@@ -28,49 +29,76 @@ const Countdown = ({ targetDate }) => {
   }, [timeLeft]);
 
   return (
-    <section className="w-full flex justify-center">
+    <section className="flex w-full justify-center">
       <div className="font-playfair w-full max-w-md px-2">
 
-        {/* FLEX SIEMPRE EN LÍNEA */}
-        <div className="flex justify-between items-center gap-2">
+        {/* CONTADOR EN UNA SOLA LÍNEA */}
+        <div className="flex items-center justify-between gap-2">
 
           {Object.keys(timeLeft).map((interval, index) => (
             <React.Fragment key={interval}>
 
-              {/* BLOQUE */}
-              <div className="
-                flex flex-col items-center justify-center
-                bg-white/10 backdrop-blur-md
-                px-2 py-2 sm:px-3 sm:py-3
-                rounded-xl
-                flex-1
-              ">
+              {/* BLOQUE DEL CONTADOR */}
+              <div
+                className="
+                  flex flex-1 flex-col
+                  items-center justify-center
+                  rounded-xl
+                  border
+                  px-2 py-3
+                  sm:px-3 sm:py-4
+                "
+                style={{
+                  backgroundColor: "rgba(251,249,244,0.55)",
+                  borderColor: "rgba(164,134,84,0.22)",
+                }}
+              >
 
-                {/* NÚMERO */}
-                <span className="
-                  text-white font-bold
-                  text-xl sm:text-2xl md:text-4xl
-                ">
+                {/* NÚMEROS EN AZUL TINTA */}
+                <span
+                  className="
+                    font-serif font-normal
+                    text-xl
+                    sm:text-2xl
+                    md:text-4xl
+                  "
+                  style={{
+                    color: "#1D2733",
+                  }}
+                >
                   {timeLeft[interval]}
                 </span>
 
-                {/* LABEL */}
-                <span className="
-                  text-white uppercase tracking-widest
-                  text-[9px] sm:text-xs
-                  opacity-80
-                ">
+                {/* ETIQUETAS */}
+                <span
+                  className="
+                    mt-1
+                    text-[9px]
+                    uppercase
+                    tracking-widest
+                    sm:text-xs
+                  "
+                  style={{
+                    color: "#777168",
+                  }}
+                >
                   {interval}
                 </span>
 
               </div>
 
-              {/* ":" */}
+              {/* SEPARADORES DORADOS */}
               {index < Object.keys(timeLeft).length - 1 && (
-                <span className="
-                  text-lg sm:text-2xl
-                  text-[#9E8E7B] opacity-80
-                ">
+                <span
+                  className="
+                    text-lg
+                    sm:text-2xl
+                  "
+                  style={{
+                    color: "#A48654",
+                    opacity: 0.8,
+                  }}
+                >
                   :
                 </span>
               )}
@@ -79,9 +107,19 @@ const Countdown = ({ targetDate }) => {
           ))}
         </div>
 
-        {/* FINAL */}
+        {/* MENSAJE FINAL */}
         {Object.keys(timeLeft).length === 0 && (
-          <span className="text-white mt-4 text-center block">
+          <span
+            className="
+              mt-4 block
+              text-center
+              font-serif
+              text-lg
+            "
+            style={{
+              color: "#1D2733",
+            }}
+          >
             ¡Llegó el gran día! 🎉
           </span>
         )}

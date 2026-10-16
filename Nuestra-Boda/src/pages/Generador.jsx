@@ -1,16 +1,168 @@
+
 import { useState } from "react";
+
+/* =========================================
+   GENERADOR DE INVITACIONES
+   Sofia & Alejandro — WEDLY
+========================================= */
 
 const palette = {
   ink: "#1D2733",
-  inkSoft: "#35404B",
+  inkSoft: "#39434D",
   paper: "#F5F1E8",
   paperLight: "#FBF9F4",
   paperDark: "#DED6C8",
   antiqueGold: "#A48654",
-  antiqueGoldDark: "#755E39",
+  antiqueGoldDark: "#725B37",
   warmGray: "#777168",
+  white: "#FFFFFF",
   line: "#C8BDAA",
 };
+
+/* =========================================
+   ICONOS
+========================================= */
+
+function CopyIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+      aria-hidden="true"
+    >
+      <rect x="8" y="8" width="11" height="11" rx="1.5" />
+      <path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-10A1.5 1.5 0 0 0 3 5.5v10A1.5 1.5 0 0 0 4.5 17H8" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+      aria-hidden="true"
+    >
+      <path d="m5 12 4 4L19 6" />
+    </svg>
+  );
+}
+
+function LinkIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+      aria-hidden="true"
+    >
+      <path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.2 1.2" />
+      <path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.2-1.2" />
+    </svg>
+  );
+}
+
+function ExternalIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+      aria-hidden="true"
+    >
+      <path d="M13 5h6v6" />
+      <path d="m19 5-9 9" />
+      <path d="M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" />
+    </svg>
+  );
+}
+
+/* =========================================
+   SEPARADOR
+========================================= */
+
+function DecorativeDivider() {
+  return (
+    <div className="flex items-center justify-center gap-3">
+      <span className="h-px w-10 bg-[#A48654] sm:w-16" />
+      <span className="h-1.5 w-1.5 rotate-45 border border-[#A48654]" />
+      <span className="h-px w-10 bg-[#A48654] sm:w-16" />
+    </div>
+  );
+}
+
+/* =========================================
+   CODIFICAR DATOS
+========================================= */
+
+/*
+  Compatible con Portada.jsx y Confirmacion.jsx:
+
+  1. Crear JSON { nombre, pases }
+  2. Invertir texto
+  3. Convertir a Base64
+  4. Adaptar Base64 para URL
+  5. Colocar en ?id=
+
+  Nota: es una codificación reversible,
+  no un cifrado criptográfico.
+*/
+
+function crearId(nombreInvitado, numeroPases) {
+  const datos = {
+    nombre: nombreInvitado,
+    pases: numeroPases,
+  };
+
+  const textoOriginal = JSON.stringify(datos);
+
+  const textoInvertido = textoOriginal
+    .split("")
+    .reverse()
+    .join("");
+
+  /*
+    TextEncoder permite incluir nombres
+    con acentos y otros caracteres Unicode.
+  */
+
+  const bytes = new TextEncoder().encode(textoInvertido);
+
+  let binario = "";
+
+  bytes.forEach((byte) => {
+    binario += String.fromCharCode(byte);
+  });
+
+  const base64 = btoa(binario);
+
+  return base64
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+/* =========================================
+   GENERADOR PRINCIPAL
+========================================= */
 
 export default function Generador() {
   const [nombre, setNombre] = useState("");
@@ -22,248 +174,229 @@ export default function Generador() {
   const [linkCopiado, setLinkCopiado] = useState(false);
   const [mensajeCopiado, setMensajeCopiado] = useState(false);
 
+  const [error, setError] = useState("");
+
   /* =========================================
-     GENERAR ID ENCRIPTADO
-     Compatible con Portada.jsx
+     REINICIAR RESULTADO
   ========================================= */
 
-  const crearId = (nombreInvitado, numeroPases) => {
-    const datos = {
-      nombre: nombreInvitado,
-      pases: numeroPases,
-    };
-
-    const textoOriginal = JSON.stringify(datos);
-
-    const textoInvertido = textoOriginal
-      .split("")
-      .reverse()
-      .join("");
-
-    const base64 = btoa(textoInvertido);
-
-    // Base64 seguro para URL
-    return base64
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=+$/g, "");
+  const limpiarResultado = () => {
+    setLink("");
+    setMensaje("");
+    setLinkCopiado(false);
+    setMensajeCopiado(false);
+    setError("");
   };
 
   /* =========================================
-     GENERAR LINK
+     GENERAR INVITACIÓN
   ========================================= */
 
   const generarLink = () => {
     const nombreLimpio = nombre.trim();
-    const numeroPases = Number.parseInt(pases, 10);
+    const numeroPases = Number(pases);
 
     if (!nombreLimpio) {
-      alert("Escribe el nombre del invitado o familia.");
+      setError(
+        "Escribe el nombre del invitado o familia."
+      );
       return;
     }
 
     if (
-      Number.isNaN(numeroPases) ||
-      numeroPases < 1
+      !Number.isInteger(numeroPases) ||
+      numeroPases < 1 ||
+      numeroPases > 100
     ) {
-      alert("Ingresa un número válido de lugares.");
+      setError(
+        "Ingresa un número válido de lugares, entre 1 y 100."
+      );
       return;
     }
 
-    const id = crearId(
-      nombreLimpio,
-      numeroPases
-    );
+    try {
+      const id = crearId(
+        nombreLimpio,
+        numeroPases
+      );
 
-    const url = `${window.location.origin}/?id=${encodeURIComponent(
-      id
-    )}`;
+      /*
+        Generamos el enlace hacia la raíz
+        de la invitación, igual que antes.
+      */
 
-    setLink(url);
+      const url = new URL("/", window.location.origin);
 
-    const textoPases =
-      numeroPases === 1
-        ? "1 lugar"
-        : `${numeroPases} lugares`;
+      url.searchParams.set("id", id);
 
-    const mensajeWhatsApp = `✨ Invitación especial ✨
+      const enlaceFinal = url.toString();
+
+      setLink(enlaceFinal);
+
+      const textoPases =
+        numeroPases === 1
+          ? "1 lugar"
+          : `${numeroPases} lugares`;
+
+      const mensajeWhatsApp = `✨ *Invitación especial* ✨
 
 Hola ${nombreLimpio} 🤍
 
 Con mucha alegría queremos compartir contigo nuestra invitación de boda.
 
 Hemos reservado especialmente para ti:
-🎟️ ${textoPases}
+🎟️ *${textoPases}*
 
 Puedes consultar todos los detalles de nuestra celebración en el siguiente enlace:
 
-${url}
+${enlaceFinal}
 
 Será un gusto compartir este momento tan especial contigo.
 
-Valeria & Alejandro 🤍`;
+*Sofia & Alejandro* 🤍`;
 
-    setMensaje(mensajeWhatsApp);
+      setMensaje(mensajeWhatsApp);
 
-    setLinkCopiado(false);
-    setMensajeCopiado(false);
-  };
+      setLinkCopiado(false);
+      setMensajeCopiado(false);
+      setError("");
+    } catch (err) {
+      console.error("Error al generar invitación:", err);
 
-  /* =========================================
-     COPIAR LINK
-  ========================================= */
-
-  const copiarLink = async () => {
-    if (!link) return;
-
-    try {
-      await navigator.clipboard.writeText(link);
-
-      setLinkCopiado(true);
-
-      setTimeout(() => {
-        setLinkCopiado(false);
-      }, 2000);
-    } catch (error) {
-      console.error(
-        "No se pudo copiar el link:",
-        error
+      setError(
+        "No se pudo generar la invitación. Inténtalo nuevamente."
       );
     }
   };
 
   /* =========================================
-     COPIAR MENSAJE
+     COPIAR AL PORTAPAPELES
   ========================================= */
 
-  const copiarMensaje = async () => {
+  const copiarTexto = async (texto, tipo) => {
+    if (!texto) return;
+
+    try {
+      await navigator.clipboard.writeText(texto);
+
+      if (tipo === "link") {
+        setLinkCopiado(true);
+        setTimeout(() => setLinkCopiado(false), 2000);
+      } else {
+        setMensajeCopiado(true);
+        setTimeout(() => setMensajeCopiado(false), 2000);
+      }
+    } catch (err) {
+      console.error("No se pudo copiar:", err);
+      setError(
+        "No se pudo copiar automáticamente. Selecciona el texto para copiarlo."
+      );
+    }
+  };
+
+  /* =========================================
+     ABRIR WHATSAPP
+  ========================================= */
+
+  const abrirWhatsApp = () => {
     if (!mensaje) return;
 
-    try {
-      await navigator.clipboard.writeText(
-        mensaje
-      );
+    const url =
+      "https://wa.me/?text=" +
+      encodeURIComponent(mensaje);
 
-      setMensajeCopiado(true);
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
-      setTimeout(() => {
-        setMensajeCopiado(false);
-      }, 2000);
-    } catch (error) {
-      console.error(
-        "No se pudo copiar el mensaje:",
-        error
-      );
-    }
+  /* =========================================
+     VISTA PREVIA DE WHATSAPP
+  ========================================= */
+
+  const renderizarMensaje = (texto) => {
+    /*
+      Muestra los asteriscos de formato tal como
+      se escriben en el editor. WhatsApp aplicará
+      su propio formato al enviarlo.
+    */
+
+    return texto;
   };
 
   return (
     <main
       className="
-        min-h-screen
-        w-full
-        px-4
-        py-8
-        sm:px-6
-        sm:py-12
+        min-h-screen w-full
+        px-4 py-10
+        sm:px-6 sm:py-14
         lg:px-10
       "
       style={{
         backgroundColor: palette.paperLight,
         color: palette.ink,
-        backgroundImage: `
-          repeating-linear-gradient(
-            0deg,
-            rgba(53,64,75,0.015) 0px,
-            rgba(53,64,75,0.015) 1px,
-            transparent 1px,
-            transparent 5px
-          )
-        `,
       }}
     >
       {/* =========================================
           ENCABEZADO
       ========================================= */}
 
-      <div
+      <header
         className="
-          mx-auto
-          mb-10
-          max-w-6xl
+          mx-auto mb-12 max-w-6xl
           text-center
         "
       >
         <p
           className="
-            text-[9px]
-            uppercase
-            tracking-[0.4em]
+            text-[9px] uppercase
+            tracking-[0.42em]
             sm:text-[10px]
           "
           style={{
             color: palette.antiqueGoldDark,
           }}
         >
-          Valeria & Alejandro
+          Sofia & Alejandro
         </p>
 
         <h1
           className="
-            mt-4
-            font-serif
-            text-3xl
-            font-normal
-            sm:text-4xl
-            lg:text-5xl
+            mt-4 font-serif
+            text-3xl font-normal
+            sm:text-4xl lg:text-5xl
           "
         >
           Generador de invitaciones
         </h1>
 
-        <div
-          className="
-            mx-auto
-            mt-5
-            h-px
-            w-16
-          "
-          style={{
-            backgroundColor:
-              "rgba(164,134,84,0.65)",
-          }}
-        />
+        <div className="mt-6">
+          <DecorativeDivider />
+        </div>
 
         <p
           className="
-            mx-auto
-            mt-5
-            max-w-xl
-            font-serif
-            text-sm
-            leading-6
-            sm:text-base
+            mx-auto mt-6 max-w-xl
+            font-serif text-sm
+            leading-7 sm:text-base
           "
           style={{
             color: palette.warmGray,
           }}
         >
-          Personaliza el nombre y los lugares
-          reservados para cada invitado.
+          Personaliza el nombre y los lugares reservados
+          para cada invitado y comparte su enlace único.
         </p>
-      </div>
+      </header>
 
       {/* =========================================
-          GRID PRINCIPAL
+          CONTENIDO PRINCIPAL
       ========================================= */}
 
       <div
         className="
-          mx-auto
-          grid
-          max-w-6xl
-          gap-8
-          lg:grid-cols-[0.9fr_1.1fr]
+          mx-auto grid max-w-6xl
+          gap-9
+          lg:grid-cols-[0.95fr_1.05fr]
+          lg:items-start
           lg:gap-12
         "
       >
@@ -273,55 +406,38 @@ Valeria & Alejandro 🤍`;
 
         <section
           className="
-            order-2
-            border
-            bg-white/70
-            p-5
-            shadow-[0_18px_50px_rgba(29,39,51,0.08)]
-            backdrop-blur-sm
-            sm:p-8
-            lg:order-1
+            order-2 border bg-white
+            p-5 sm:p-8 lg:order-1
           "
           style={{
-            borderColor:
-              "rgba(164,134,84,0.28)",
+            borderColor: "rgba(164,134,84,0.35)",
+            boxShadow: "0 18px 45px rgba(29,39,51,0.06)",
           }}
         >
-          <div>
-            <p
-              className="
-                text-[9px]
-                uppercase
-                tracking-[0.32em]
-              "
-              style={{
-                color: palette.antiqueGoldDark,
-              }}
-            >
-              Datos del invitado
-            </p>
+          <p
+            className="
+              text-[9px] uppercase
+              tracking-[0.32em]
+            "
+            style={{
+              color: palette.antiqueGoldDark,
+            }}
+          >
+            Datos del invitado
+          </p>
 
-            <h2
-              className="
-                mt-3
-                font-serif
-                text-2xl
-              "
-            >
-              Crear invitación
-            </h2>
-          </div>
+          <h2 className="mt-3 font-serif text-2xl">
+            Crear invitación
+          </h2>
 
           {/* NOMBRE */}
 
-          <div className="mt-7">
+          <div className="mt-8">
             <label
+              htmlFor="generador-nombre"
               className="
-                mb-2
-                block
-                text-[10px]
-                uppercase
-                tracking-[0.24em]
+                mb-3 block text-[10px]
+                uppercase tracking-[0.24em]
               "
               style={{
                 color: palette.warmGray,
@@ -331,43 +447,35 @@ Valeria & Alejandro 🤍`;
             </label>
 
             <input
+              id="generador-nombre"
               type="text"
               placeholder="Ej. Familia Hernández"
               value={nombre}
-              onChange={(e) => {
-                setNombre(e.target.value);
-                setLink("");
+              onChange={(event) => {
+                setNombre(event.target.value);
+                limpiarResultado();
               }}
               className="
-                w-full
-                border
-                bg-white
-                px-4
-                py-3.5
-                font-serif
-                text-base
+                w-full border bg-white
+                px-4 py-4
+                font-serif text-base
                 outline-none
-                transition
-                placeholder:text-gray-400
-                focus:ring-1
+                focus:border-[#A48654]
               "
               style={{
-                borderColor:
-                  "rgba(164,134,84,0.4)",
+                borderColor: "rgba(164,134,84,0.4)",
               }}
             />
           </div>
 
           {/* PASES */}
 
-          <div className="mt-5">
+          <div className="mt-6">
             <label
+              htmlFor="generador-pases"
               className="
-                mb-2
-                block
-                text-[10px]
-                uppercase
-                tracking-[0.24em]
+                mb-3 block text-[10px]
+                uppercase tracking-[0.24em]
               "
               style={{
                 color: palette.warmGray,
@@ -377,32 +485,47 @@ Valeria & Alejandro 🤍`;
             </label>
 
             <input
+              id="generador-pases"
               type="number"
               min="1"
+              max="100"
+              step="1"
               inputMode="numeric"
               value={pases}
-              onChange={(e) => {
-                setPases(e.target.value);
-                setLink("");
+              onChange={(event) => {
+                setPases(event.target.value);
+                limpiarResultado();
               }}
               className="
-                w-full
-                border
-                bg-white
-                px-4
-                py-3.5
-                font-serif
-                text-base
+                w-full border bg-white
+                px-4 py-4
+                font-serif text-base
                 outline-none
-                transition
-                focus:ring-1
+                focus:border-[#A48654]
               "
               style={{
-                borderColor:
-                  "rgba(164,134,84,0.4)",
+                borderColor: "rgba(164,134,84,0.4)",
               }}
             />
           </div>
+
+          {/* ERROR */}
+
+          {error && (
+            <p
+              role="alert"
+              className="
+                mt-5 border px-4 py-3
+                text-sm leading-6
+              "
+              style={{
+                color: "#9A3939",
+                borderColor: "rgba(154,57,57,0.35)",
+              }}
+            >
+              {error}
+            </p>
+          )}
 
           {/* GENERAR */}
 
@@ -410,15 +533,10 @@ Valeria & Alejandro 🤍`;
             type="button"
             onClick={generarLink}
             className="
-              mt-7
-              w-full
-              px-6
-              py-4
-              text-[10px]
-              uppercase
+              mt-8 w-full px-6 py-4
+              text-[10px] uppercase
               tracking-[0.26em]
-              text-white
-              transition
+              text-white transition
               hover:opacity-90
               active:scale-[0.99]
             "
@@ -429,90 +547,119 @@ Valeria & Alejandro 🤍`;
             Generar invitación
           </button>
 
-          {/* LINK */}
+          {/* =========================================
+              ENLACE PERSONALIZADO
+          ========================================= */}
 
           {link && (
-            <div className="mt-7">
+            <div
+              className="
+                mt-9 border-t pt-8
+              "
+              style={{
+                borderColor: "rgba(164,134,84,0.3)",
+              }}
+            >
               <p
                 className="
-                  mb-2
-                  text-[9px]
-                  uppercase
-                  tracking-[0.26em]
+                  text-[9px] uppercase
+                  tracking-[0.3em]
                 "
                 style={{
-                  color: palette.warmGray,
+                  color: palette.antiqueGoldDark,
                 }}
               >
-                Link personalizado
+                Enlace personalizado
               </p>
 
               <div
                 className="
-                  break-all
-                  border
-                  bg-[#F5F1E8]
-                  p-4
-                  text-xs
-                  leading-5
+                  mt-4 break-all border
+                  p-4 text-xs leading-6
                 "
                 style={{
-                  borderColor:
-                    "rgba(164,134,84,0.3)",
+                  backgroundColor: palette.paper,
+                  borderColor: "rgba(164,134,84,0.3)",
                   color: palette.inkSoft,
                 }}
               >
                 {link}
               </div>
 
-              <button
-                type="button"
-                onClick={copiarLink}
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => copiarTexto(link, "link")}
+                  className="
+                    flex items-center justify-center
+                    gap-2 border px-4 py-3
+                    text-[9px] uppercase
+                    tracking-[0.18em]
+                    transition hover:bg-[#F5F1E8]
+                  "
+                  style={{
+                    borderColor: palette.ink,
+                    color: palette.ink,
+                  }}
+                >
+                  {linkCopiado ? <CheckIcon /> : <CopyIcon />}
+                  {linkCopiado ? "Enlace copiado" : "Copiar enlace"}
+                </button>
+
+                <a
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+                    flex items-center justify-center
+                    gap-2 border px-4 py-3
+                    text-[9px] uppercase
+                    tracking-[0.18em]
+                    transition hover:opacity-90
+                  "
+                  style={{
+                    backgroundColor: palette.ink,
+                    borderColor: palette.ink,
+                    color: palette.white,
+                  }}
+                >
+                  <ExternalIcon />
+                  Abrir invitación
+                </a>
+              </div>
+
+              <p
                 className="
-                  mt-3
-                  w-full
-                  border
-                  px-5
-                  py-3
-                  text-[9px]
-                  uppercase
-                  tracking-[0.24em]
-                  transition
-                  hover:bg-black/5
+                  mt-4 font-serif
+                  text-xs italic leading-6
                 "
                 style={{
-                  borderColor:
-                    "rgba(29,39,51,0.4)",
+                  color: palette.warmGray,
                 }}
               >
-                {linkCopiado
-                  ? "Link copiado ✓"
-                  : "Copiar link"}
-              </button>
+                Este enlace incluye el nombre y los pases
+                asignados para la confirmación de asistencia.
+              </p>
             </div>
           )}
 
           {/* =========================================
-              MENSAJE WHATSAPP
+              MENSAJE PARA WHATSAPP
           ========================================= */}
 
           {link && (
             <div
               className="
-                mt-8
-                border-t
-                pt-7
+                mt-9 border-t pt-8
               "
               style={{
-                borderColor:
-                  "rgba(164,134,84,0.28)",
+                borderColor: "rgba(164,134,84,0.3)",
               }}
             >
               <p
                 className="
-                  text-[9px]
-                  uppercase
-                  tracking-[0.28em]
+                  text-[9px] uppercase
+                  tracking-[0.3em]
                 "
                 style={{
                   color: palette.antiqueGoldDark,
@@ -523,88 +670,94 @@ Valeria & Alejandro 🤍`;
 
               <p
                 className="
-                  mt-2
-                  text-xs
-                  leading-5
+                  mt-3 text-xs leading-6
                 "
                 style={{
                   color: palette.warmGray,
                 }}
               >
-                Puedes editar el mensaje antes de
-                copiarlo.
+                Puedes personalizar el texto antes de
+                copiarlo o enviarlo.
               </p>
 
               <textarea
                 value={mensaje}
-                onChange={(e) =>
-                  setMensaje(e.target.value)
-                }
+                onChange={(event) => {
+                  setMensaje(event.target.value);
+                  setMensajeCopiado(false);
+                }}
                 rows={14}
                 className="
-                  mt-4
-                  w-full
-                  resize-y
-                  border
-                  bg-white
-                  p-4
-                  text-sm
-                  leading-6
+                  mt-4 w-full resize-y
+                  border bg-white p-4
+                  text-sm leading-6
                   outline-none
-                  focus:ring-1
+                  focus:border-[#A48654]
                 "
                 style={{
-                  borderColor:
-                    "rgba(164,134,84,0.35)",
+                  borderColor: "rgba(164,134,84,0.4)",
+                  color: palette.ink,
                 }}
               />
 
               <button
                 type="button"
-                onClick={copiarMensaje}
+                onClick={() => copiarTexto(mensaje, "mensaje")}
                 className="
-                  mt-3
-                  w-full
-                  px-6
-                  py-4
-                  text-[10px]
-                  uppercase
-                  tracking-[0.24em]
-                  text-white
-                  transition
+                  mt-4 flex w-full
+                  items-center justify-center gap-3
+                  px-6 py-4 text-[10px]
+                  uppercase tracking-[0.22em]
+                  text-white transition
                   hover:opacity-90
                 "
                 style={{
-                  backgroundColor:
-                    palette.antiqueGoldDark,
+                  backgroundColor: palette.antiqueGoldDark,
                 }}
               >
+                {mensajeCopiado ? <CheckIcon /> : <CopyIcon />}
                 {mensajeCopiado
-                  ? "Mensaje copiado ✓"
+                  ? "Mensaje copiado"
                   : "Copiar mensaje para WhatsApp"}
+              </button>
+
+              <button
+                type="button"
+                onClick={abrirWhatsApp}
+                className="
+                  mt-3 flex w-full
+                  items-center justify-center gap-3
+                  border px-6 py-4
+                  text-[10px] uppercase
+                  tracking-[0.22em]
+                  transition hover:bg-[#F5F1E8]
+                "
+                style={{
+                  borderColor: palette.ink,
+                  color: palette.ink,
+                }}
+              >
+                <ExternalIcon />
+                Abrir en WhatsApp
               </button>
             </div>
           )}
         </section>
 
         {/* =========================================
-            IMAGEN DE PORTADA
+            VISTA PREVIA
         ========================================= */}
 
         <section
           className="
-            order-1
-            flex
-            flex-col
-            items-center
-            lg:order-2
+            order-1 flex flex-col
+            items-center lg:order-2
           "
         >
-          <div className="mb-5 text-center">
+          <div className="mb-6 text-center">
             <p
               className="
-                text-[9px]
-                uppercase
+                text-[9px] uppercase
                 tracking-[0.32em]
               "
               style={{
@@ -614,123 +767,171 @@ Valeria & Alejandro 🤍`;
               Invitación
             </p>
 
-            <h2
-              className="
-                mt-2
-                font-serif
-                text-2xl
-              "
-            >
-              Valeria & Alejandro
+            <h2 className="mt-3 font-serif text-2xl">
+              Sofia & Alejandro
             </h2>
           </div>
 
-          {/* FOTO REAL DE PORTADA */}
-
-          <div
-            className="
-              w-full
-              max-w-[430px]
-              overflow-hidden
-              border
-              bg-white
-              p-2
-              shadow-[0_25px_60px_rgba(29,39,51,0.14)]
-              sm:p-3
-              lg:sticky
-              lg:top-8
-            "
-            style={{
-              borderColor: "rgba(164,134,84,0.3)",
-            }}
-          >
-            <img
-              src="/portada.png"
-              alt="Portada de la invitación de Valeria y Alejandro"
-              className="
-                block
-                h-auto
-                w-full
-                object-contain
-              "
-            />
-          </div>
 
           {/* =========================================
-              PREVIEW WHATSAPP
+              VISTA PREVIA DE WHATSAPP
           ========================================= */}
 
           {link && (
             <div
               className="
-                mt-10
-                w-full
-                max-w-[430px]
+                mt-10 w-full max-w-[430px]
               "
             >
               <p
                 className="
-                  mb-3
-                  text-center
-                  text-[9px]
-                  uppercase
-                  tracking-[0.3em]
+                  mb-4 text-center text-[9px]
+                  uppercase tracking-[0.3em]
                 "
                 style={{
                   color: palette.antiqueGoldDark,
                 }}
               >
-                Vista previa del mensaje
+                Vista previa de WhatsApp
               </p>
 
               <div
                 className="
-                  rounded-2xl
-                  bg-[#EFEAE2]
-                  p-4
-                  shadow-[0_15px_40px_rgba(29,39,51,0.08)]
+                  overflow-hidden rounded-2xl
+                  border border-[#D6D0C6]
                 "
+                style={{
+                  backgroundColor: "#EFEAE2",
+                  boxShadow: "0 15px 35px rgba(29,39,51,0.08)",
+                }}
               >
+                {/* ENCABEZADO SIMULADO */}
+
                 <div
                   className="
-                    ml-auto
-                    max-w-[90%]
-                    rounded-xl
-                    rounded-tr-sm
-                    bg-[#D9FDD3]
-                    px-4
-                    py-3
-                    shadow-sm
+                    flex items-center gap-3
+                    border-b px-4 py-3
                   "
+                  style={{
+                    backgroundColor: "#F7F6F3",
+                    borderColor: "#DDD8D0",
+                  }}
                 >
-                  <p
+                  <div
                     className="
-                      whitespace-pre-wrap
-                      break-words
-                      text-[13px]
-                      leading-5
-                      text-[#1D2733]
+                      flex h-10 w-10
+                      items-center justify-center
+                      rounded-full
+                      font-serif text-lg
                     "
+                    style={{
+                      backgroundColor: palette.ink,
+                      color: palette.paperLight,
+                    }}
                   >
-                    {mensaje}
-                  </p>
+                    W
+                  </div>
 
-                  <p
+                  <div>
+                    <p
+                      className="
+                        text-sm font-semibold
+                        text-[#1D2733]
+                      "
+                    >
+                      Vista previa del mensaje
+                    </p>
+
+                    <p className="text-[11px] text-[#777168]">
+                      Así se verá el texto al compartirlo
+                    </p>
+                  </div>
+                </div>
+
+                {/* BURBUJA */}
+
+                <div className="min-h-[250px] p-4">
+                  <div
                     className="
-                      mt-1
-                      text-right
-                      text-[9px]
-                      text-black/40
+                      ml-auto max-w-[94%]
+                      rounded-xl rounded-tr-sm
+                      px-4 py-3
                     "
+                    style={{
+                      backgroundColor: "#D9FDD3",
+                      boxShadow: "0 2px 5px rgba(0,0,0,0.06)",
+                    }}
                   >
-                    12:00 ✓✓
-                  </p>
+                    <p
+                      className="
+                        whitespace-pre-wrap
+                        break-words
+                        text-[13px]
+                        leading-6
+                        text-[#1D2733]
+                      "
+                    >
+                      {renderizarMensaje(mensaje)}
+                    </p>
+
+                    <p
+                      className="
+                        mt-2 text-right
+                        text-[10px]
+                      "
+                      style={{
+                        color: "#6F8270",
+                      }}
+                    >
+                      Vista previa ✓✓
+                    </p>
+                  </div>
                 </div>
               </div>
+
+              <p
+                className="
+                  mx-auto mt-4 max-w-sm
+                  text-center font-serif
+                  text-xs italic leading-6
+                "
+                style={{
+                  color: palette.warmGray,
+                }}
+              >
+                La vista previa muestra el mensaje que
+                podrás copiar o compartir con cada invitado.
+              </p>
             </div>
           )}
         </section>
       </div>
+
+      {/* =========================================
+          PIE DEL GENERADOR
+      ========================================= */}
+
+      <footer
+        className="
+          mx-auto mt-16 max-w-6xl
+          border-t pt-7 text-center
+        "
+        style={{
+          borderColor: "rgba(164,134,84,0.3)",
+        }}
+      >
+        <p
+          className="
+            text-[9px] uppercase
+            tracking-[0.35em]
+          "
+          style={{
+            color: palette.antiqueGoldDark,
+          }}
+        >
+          Sofia & Alejandro · Invitaciones personalizadas
+        </p>
+      </footer>
     </main>
   );
 }

@@ -1,8 +1,9 @@
+
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 /* =========================================
-   ÁLBUM COMPARTIDO — ESTILO CLÁSICO
+   ÁLBUM COMPARTIDO — FONDO BLANCO SÓLIDO
 ========================================= */
 
 const palette = {
@@ -10,19 +11,16 @@ const palette = {
   inkSoft: "#39434D",
   paper: "#F5F1E8",
   paperLight: "#FBF9F4",
-  paperDark: "#E5DED2",
+  white: "#FFFFFF",
   antiqueGold: "#A48654",
   antiqueGoldDark: "#725B37",
   warmGray: "#777168",
 };
 
-const albumCode = "MXat19tb26";
+const albumCode = "MX6fbe8306";
 
 const fadeUp = {
-  hidden: {
-    opacity: 0,
-    y: 24,
-  },
+  hidden: { opacity: 0, y: 24 },
   show: {
     opacity: 1,
     y: 0,
@@ -32,10 +30,6 @@ const fadeUp = {
     },
   },
 };
-
-/* =========================================
-   ORNAMENTO DE ESQUINA
-========================================= */
 
 function CornerOrnament({ className = "" }) {
   return (
@@ -50,27 +44,20 @@ function CornerOrnament({ className = "" }) {
         stroke="currentColor"
         strokeWidth="1"
       />
-
       <path
         d="M15 72V34c0-10.5 8.5-19 19-19h38"
         stroke="currentColor"
         strokeWidth="0.65"
       />
-
       <path
         d="M30 5C30 18.8 18.8 30 5 30"
         stroke="currentColor"
         strokeWidth="0.75"
       />
-
       <circle cx="15" cy="15" r="2" fill="currentColor" />
     </svg>
   );
 }
-
-/* =========================================
-   RAMA BOTÁNICA
-========================================= */
 
 function BotanicalBranch({ className = "" }) {
   return (
@@ -86,53 +73,45 @@ function BotanicalBranch({ className = "" }) {
         strokeWidth="1"
         strokeLinecap="round"
       />
-
       <path
         d="M76 205C54 192 41 174 35 151"
         stroke="currentColor"
         strokeWidth="0.8"
         strokeLinecap="round"
       />
-
       <path
         d="M75 167C97 153 109 133 113 109"
         stroke="currentColor"
         strokeWidth="0.8"
         strokeLinecap="round"
       />
-
       <path
         d="M73 123C53 110 43 93 39 72"
         stroke="currentColor"
         strokeWidth="0.8"
         strokeLinecap="round"
       />
-
       <path
         d="M72 83C91 71 101 53 103 34"
         stroke="currentColor"
         strokeWidth="0.8"
         strokeLinecap="round"
       />
-
       <path
         d="M35 151C49 150 60 158 67 173C52 172 41 165 35 151Z"
         stroke="currentColor"
         strokeWidth="0.7"
       />
-
       <path
         d="M113 109C99 109 88 117 80 132C96 131 107 123 113 109Z"
         stroke="currentColor"
         strokeWidth="0.7"
       />
-
       <path
         d="M39 72C53 73 63 81 69 95C54 94 44 86 39 72Z"
         stroke="currentColor"
         strokeWidth="0.7"
       />
-
       <path
         d="M103 34C90 35 80 42 74 55C88 54 98 47 103 34Z"
         stroke="currentColor"
@@ -142,42 +121,24 @@ function BotanicalBranch({ className = "" }) {
   );
 }
 
-/* =========================================
-   SEPARADOR
-========================================= */
-
 function DecorativeDivider({ compact = false }) {
   return (
     <div className="flex items-center justify-center gap-3">
       <span
         className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
-        style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(164,134,84,0.72))",
-        }}
+        style={{ backgroundColor: palette.antiqueGold }}
       />
-
       <span
         className="h-[5px] w-[5px] rotate-45 border"
-        style={{
-          borderColor: "rgba(164,134,84,0.72)",
-        }}
+        style={{ borderColor: palette.antiqueGold }}
       />
-
       <span
         className={compact ? "h-px w-8 sm:w-12" : "h-px w-10 sm:w-16"}
-        style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(164,134,84,0.72))",
-        }}
+        style={{ backgroundColor: palette.antiqueGold }}
       />
     </div>
   );
 }
-
-/* =========================================
-   ICONOS
-========================================= */
 
 function CameraIcon() {
   return (
@@ -268,10 +229,6 @@ function CloseIcon() {
   );
 }
 
-/* =========================================
-   COMPONENTE
-========================================= */
-
 const Album = () => {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -282,14 +239,16 @@ const Album = () => {
     if (!open) return undefined;
 
     const previousBodyOverflow = document.body.style.overflow;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousHtmlOverflow =
+      document.documentElement.style.overflow;
 
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.documentElement.style.overflow =
+        previousHtmlOverflow;
     };
   }, [open]);
 
@@ -356,41 +315,13 @@ const Album = () => {
           lg:py-32
         "
         style={{
-          background: `
-            linear-gradient(
-              180deg,
-              ${palette.paperLight} 0%,
-              ${palette.paper} 56%,
-              ${palette.paperDark} 100%
-            )
-          `,
+          backgroundColor: palette.white,
         }}
       >
-        {/* TEXTURA DE PAPEL */}
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-0
-            opacity-[0.16]
-          "
-          style={{
-            backgroundImage: `
-              repeating-linear-gradient(
-                0deg,
-                rgba(29,39,51,0.025) 0px,
-                rgba(29,39,51,0.025) 1px,
-                transparent 1px,
-                transparent 5px
-              )
-            `,
-          }}
-        />
-
         {/* MARCOS */}
 
         <div
+          aria-hidden="true"
           className="
             pointer-events-none
             absolute
@@ -400,11 +331,12 @@ const Album = () => {
             lg:inset-10
           "
           style={{
-            borderColor: "rgba(164,134,84,0.25)",
+            borderColor: "rgba(164,134,84,0.35)",
           }}
         />
 
         <div
+          aria-hidden="true"
           className="
             pointer-events-none
             absolute
@@ -414,7 +346,7 @@ const Album = () => {
             lg:inset-[46px]
           "
           style={{
-            borderColor: "rgba(164,134,84,0.1)",
+            borderColor: "rgba(164,134,84,0.15)",
           }}
         />
 
@@ -428,7 +360,7 @@ const Album = () => {
             top-6
             h-16
             w-16
-            text-[#A48654]/25
+            text-[#A48654]/40
             sm:left-9
             sm:top-9
             sm:h-20
@@ -445,7 +377,7 @@ const Album = () => {
             h-16
             w-16
             rotate-90
-            text-[#A48654]/25
+            text-[#A48654]/40
             sm:right-9
             sm:top-9
             sm:h-20
@@ -462,7 +394,7 @@ const Album = () => {
             h-16
             w-16
             -rotate-90
-            text-[#A48654]/25
+            text-[#A48654]/40
             sm:bottom-9
             sm:left-9
             sm:h-20
@@ -479,7 +411,7 @@ const Album = () => {
             h-16
             w-16
             rotate-180
-            text-[#A48654]/25
+            text-[#A48654]/40
             sm:bottom-9
             sm:right-9
             sm:h-20
@@ -496,7 +428,7 @@ const Album = () => {
             h-[250px]
             w-[145px]
             -rotate-12
-            text-[#A48654]/10
+            text-[#A48654]/15
             sm:h-[310px]
             sm:w-[180px]
             lg:left-2
@@ -512,7 +444,7 @@ const Album = () => {
             h-[250px]
             w-[145px]
             rotate-[168deg]
-            text-[#A48654]/10
+            text-[#A48654]/15
             sm:h-[310px]
             sm:w-[180px]
             lg:right-2
@@ -550,18 +482,10 @@ const Album = () => {
               color: palette.antiqueGoldDark,
               borderColor: "rgba(164,134,84,0.42)",
             }}
-            initial={{
-              opacity: 0,
-              scale: 0.92,
-            }}
-            whileInView={{
-              opacity: 1,
-              scale: 1,
-            }}
+            initial={{ opacity: 0, scale: 0.92 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 0.8,
-            }}
+            transition={{ duration: 0.8 }}
           >
             <CameraIcon />
           </motion.div>
@@ -578,19 +502,10 @@ const Album = () => {
             style={{
               color: palette.antiqueGoldDark,
             }}
-            initial={{
-              opacity: 0,
-              y: 10,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 0.8,
-              delay: 0.08,
-            }}
+            transition={{ duration: 0.8, delay: 0.08 }}
           >
             Recuerdos compartidos
           </motion.p>
@@ -613,19 +528,10 @@ const Album = () => {
             style={{
               color: palette.ink,
             }}
-            initial={{
-              opacity: 0,
-              y: 16,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 0.9,
-              delay: 0.12,
-            }}
+            transition={{ duration: 0.9, delay: 0.12 }}
           >
             Álbum compartido
           </motion.h2>
@@ -645,19 +551,10 @@ const Album = () => {
             style={{
               color: palette.warmGray,
             }}
-            initial={{
-              opacity: 0,
-              y: 14,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 0.9,
-              delay: 0.18,
-            }}
+            transition={{ duration: 0.9, delay: 0.18 }}
           >
             Queremos ver nuestra celebración también a través de tus ojos.
             Comparte las fotografías que captures y ayúdanos a conservar cada
@@ -674,21 +571,12 @@ const Album = () => {
               sm:px-10
             "
             style={{
-              borderColor: "rgba(164,134,84,0.3)",
+              borderColor: "rgba(164,134,84,0.35)",
             }}
-            initial={{
-              opacity: 0,
-              y: 14,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{
-              duration: 0.85,
-              delay: 0.24,
-            }}
+            transition={{ duration: 0.85, delay: 0.24 }}
           >
             <p
               className="
@@ -747,9 +635,7 @@ const Album = () => {
               y: -2,
               backgroundColor: palette.inkSoft,
             }}
-            whileTap={{
-              scale: 0.985,
-            }}
+            whileTap={{ scale: 0.985 }}
           >
             <CameraIcon />
 
@@ -769,7 +655,7 @@ const Album = () => {
       </motion.section>
 
       {/* =========================================
-          MODAL
+          MODAL DEL ÁLBUM
       ========================================= */}
 
       <AnimatePresence>
@@ -788,21 +674,12 @@ const Album = () => {
               bg-[#111820]/78
               px-4
               py-5
-              backdrop-blur-sm
               sm:px-8
             "
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            transition={{
-              duration: 0.3,
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) {
                 setOpen(false);
@@ -828,7 +705,7 @@ const Album = () => {
                 md:px-14
               "
               style={{
-                backgroundColor: palette.paperLight,
+                backgroundColor: palette.white,
                 borderColor: "rgba(164,134,84,0.48)",
                 boxShadow: "0 30px 100px rgba(0,0,0,0.34)",
               }}
@@ -852,31 +729,10 @@ const Album = () => {
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              {/* TEXTURA */}
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  inset-0
-                  opacity-[0.14]
-                "
-                style={{
-                  backgroundImage: `
-                    repeating-linear-gradient(
-                      0deg,
-                      rgba(29,39,51,0.025) 0px,
-                      rgba(29,39,51,0.025) 1px,
-                      transparent 1px,
-                      transparent 5px
-                    )
-                  `,
-                }}
-              />
-
               {/* BORDE INTERIOR */}
 
               <div
+                aria-hidden="true"
                 className="
                   pointer-events-none
                   absolute
@@ -884,11 +740,11 @@ const Album = () => {
                   border
                 "
                 style={{
-                  borderColor: "rgba(164,134,84,0.15)",
+                  borderColor: "rgba(164,134,84,0.2)",
                 }}
               />
 
-              {/* CERRAR */}
+              {/* BOTÓN CERRAR */}
 
               <motion.button
                 type="button"
@@ -905,11 +761,11 @@ const Album = () => {
                   items-center
                   justify-center
                   border
-                  bg-[#FBF9F4]
                   sm:right-6
                   sm:top-6
                 "
                 style={{
+                  backgroundColor: palette.white,
                   color: palette.ink,
                   borderColor: "rgba(164,134,84,0.42)",
                 }}
@@ -917,9 +773,7 @@ const Album = () => {
                   scale: 1.04,
                   backgroundColor: palette.paper,
                 }}
-                whileTap={{
-                  scale: 0.96,
-                }}
+                whileTap={{ scale: 0.96 }}
               >
                 <CloseIcon />
               </motion.button>
@@ -1036,7 +890,7 @@ const Album = () => {
                       sm:px-7
                     "
                     style={{
-                      backgroundColor: "rgba(245,241,232,0.52)",
+                      backgroundColor: palette.paperLight,
                       borderColor: "rgba(164,134,84,0.28)",
                     }}
                   >
@@ -1091,9 +945,7 @@ const Album = () => {
                         y: -2,
                         backgroundColor: palette.inkSoft,
                       }}
-                      whileTap={{
-                        scale: 0.985,
-                      }}
+                      whileTap={{ scale: 0.985 }}
                     >
                       <DownloadIcon />
 
@@ -1110,11 +962,7 @@ const Album = () => {
                     </motion.a>
 
                     <div
-                      className="
-                        my-8
-                        h-px
-                        w-20
-                      "
+                      className="my-8 h-px w-20"
                       style={{
                         backgroundColor: "rgba(164,134,84,0.38)",
                       }}
@@ -1144,11 +992,11 @@ const Album = () => {
                         justify-between
                         gap-3
                         border
-                        bg-[#FBF9F4]
                         px-4
                         py-4
                       "
                       style={{
+                        backgroundColor: palette.white,
                         borderColor: "rgba(164,134,84,0.34)",
                       }}
                     >
@@ -1190,9 +1038,7 @@ const Album = () => {
                         whileHover={{
                           backgroundColor: palette.paper,
                         }}
-                        whileTap={{
-                          scale: 0.95,
-                        }}
+                        whileTap={{ scale: 0.95 }}
                       >
                         {copied ? <CheckIcon /> : <CopyIcon />}
                       </motion.button>
@@ -1212,18 +1058,9 @@ const Album = () => {
                             ? palette.antiqueGoldDark
                             : palette.warmGray,
                         }}
-                        initial={{
-                          opacity: 0,
-                          y: 4,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                        }}
-                        exit={{
-                          opacity: 0,
-                          y: -4,
-                        }}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
                       >
                         {copied ? "Código copiado" : "Toca para copiar"}
                       </motion.p>
@@ -1274,7 +1111,7 @@ const Album = () => {
                       }}
                     >
                       <img
-                        src="/qr.png"
+                        src="/qr.jpeg"
                         alt="Código QR del álbum compartido"
                         loading="lazy"
                         className="
