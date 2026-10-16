@@ -32,7 +32,7 @@ function CopyIcon() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4"
+      className="h-4 w-4 shrink-0"
       aria-hidden="true"
     >
       <rect x="8" y="8" width="11" height="11" rx="1.5" />
@@ -50,7 +50,7 @@ function CheckIcon() {
       strokeWidth="1.6"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4"
+      className="h-4 w-4 shrink-0"
       aria-hidden="true"
     >
       <path d="m5 12 4 4L19 6" />
@@ -67,7 +67,7 @@ function LinkIcon() {
       strokeWidth="1.4"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4"
+      className="h-4 w-4 shrink-0"
       aria-hidden="true"
     >
       <path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.2 1.2" />
@@ -85,7 +85,7 @@ function ExternalIcon() {
       strokeWidth="1.4"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4"
+      className="h-4 w-4 shrink-0"
       aria-hidden="true"
     >
       <path d="M13 5h6v6" />
@@ -325,9 +325,15 @@ Será un gusto compartir este momento tan especial contigo.
   return (
     <main
       className="
-        min-h-screen w-full
-        px-4 py-10
-        sm:px-6 sm:py-14
+        min-h-screen
+        w-full
+        min-w-0
+        max-w-full
+        overflow-x-hidden
+        px-4
+        py-10
+        sm:px-6
+        sm:py-14
         lg:px-10
       "
       style={{
@@ -341,13 +347,18 @@ Será un gusto compartir este momento tan especial contigo.
 
       <header
         className="
-          mx-auto mb-12 max-w-6xl
+          mx-auto
+          mb-12
+          w-full
+          min-w-0
+          max-w-6xl
           text-center
         "
       >
         <p
           className="
-            text-[9px] uppercase
+            text-[9px]
+            uppercase
             tracking-[0.42em]
             sm:text-[10px]
           "
@@ -360,9 +371,12 @@ Será un gusto compartir este momento tan especial contigo.
 
         <h1
           className="
-            mt-4 font-serif
-            text-3xl font-normal
-            sm:text-4xl lg:text-5xl
+            mt-4
+            font-serif
+            text-3xl
+            font-normal
+            sm:text-4xl
+            lg:text-5xl
           "
         >
           Generador de invitaciones
@@ -374,9 +388,13 @@ Será un gusto compartir este momento tan especial contigo.
 
         <p
           className="
-            mx-auto mt-6 max-w-xl
-            font-serif text-sm
-            leading-7 sm:text-base
+            mx-auto
+            mt-6
+            max-w-xl
+            font-serif
+            text-sm
+            leading-7
+            sm:text-base
           "
           style={{
             color: palette.warmGray,
@@ -393,9 +411,14 @@ Será un gusto compartir este momento tan especial contigo.
 
       <div
         className="
-          mx-auto grid max-w-6xl
+          mx-auto
+          grid
+          w-full
+          min-w-0
+          max-w-6xl
+          grid-cols-1
           gap-9
-          lg:grid-cols-[0.95fr_1.05fr]
+          lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]
           lg:items-start
           lg:gap-12
         "
@@ -406,8 +429,16 @@ Será un gusto compartir este momento tan especial contigo.
 
         <section
           className="
-            order-2 border bg-white
-            p-5 sm:p-8 lg:order-1
+            order-2
+            w-full
+            min-w-0
+            max-w-full
+            overflow-hidden
+            border
+            bg-white
+            p-5
+            sm:p-8
+            lg:order-1
           "
           style={{
             borderColor: "rgba(164,134,84,0.35)",
@@ -416,7 +447,8 @@ Será un gusto compartir este momento tan especial contigo.
         >
           <p
             className="
-              text-[9px] uppercase
+              text-[9px]
+              uppercase
               tracking-[0.32em]
             "
             style={{
@@ -432,12 +464,15 @@ Será un gusto compartir este momento tan especial contigo.
 
           {/* NOMBRE */}
 
-          <div className="mt-8">
+          <div className="mt-8 w-full min-w-0">
             <label
               htmlFor="generador-nombre"
               className="
-                mb-3 block text-[10px]
-                uppercase tracking-[0.24em]
+                mb-3
+                block
+                text-[10px]
+                uppercase
+                tracking-[0.24em]
               "
               style={{
                 color: palette.warmGray,
@@ -456,9 +491,16 @@ Será un gusto compartir este momento tan especial contigo.
                 limpiarResultado();
               }}
               className="
-                w-full border bg-white
-                px-4 py-4
-                font-serif text-base
+                block
+                w-full
+                min-w-0
+                max-w-full
+                border
+                bg-white
+                px-4
+                py-4
+                font-serif
+                text-base
                 outline-none
                 focus:border-[#A48654]
               "
@@ -470,12 +512,15 @@ Será un gusto compartir este momento tan especial contigo.
 
           {/* PASES */}
 
-          <div className="mt-6">
+          <div className="mt-6 w-full min-w-0">
             <label
               htmlFor="generador-pases"
               className="
-                mb-3 block text-[10px]
-                uppercase tracking-[0.24em]
+                mb-3
+                block
+                text-[10px]
+                uppercase
+                tracking-[0.24em]
               "
               style={{
                 color: palette.warmGray,
@@ -497,9 +542,16 @@ Será un gusto compartir este momento tan especial contigo.
                 limpiarResultado();
               }}
               className="
-                w-full border bg-white
-                px-4 py-4
-                font-serif text-base
+                block
+                w-full
+                min-w-0
+                max-w-full
+                border
+                bg-white
+                px-4
+                py-4
+                font-serif
+                text-base
                 outline-none
                 focus:border-[#A48654]
               "
@@ -515,8 +567,14 @@ Será un gusto compartir este momento tan especial contigo.
             <p
               role="alert"
               className="
-                mt-5 border px-4 py-3
-                text-sm leading-6
+                mt-5
+                max-w-full
+                break-words
+                border
+                px-4
+                py-3
+                text-sm
+                leading-6
               "
               style={{
                 color: "#9A3939",
@@ -533,10 +591,16 @@ Será un gusto compartir este momento tan especial contigo.
             type="button"
             onClick={generarLink}
             className="
-              mt-8 w-full px-6 py-4
-              text-[10px] uppercase
+              mt-8
+              w-full
+              max-w-full
+              px-6
+              py-4
+              text-[10px]
+              uppercase
               tracking-[0.26em]
-              text-white transition
+              text-white
+              transition
               hover:opacity-90
               active:scale-[0.99]
             "
@@ -554,7 +618,12 @@ Será un gusto compartir este momento tan especial contigo.
           {link && (
             <div
               className="
-                mt-9 border-t pt-8
+                mt-9
+                w-full
+                min-w-0
+                max-w-full
+                border-t
+                pt-8
               "
               style={{
                 borderColor: "rgba(164,134,84,0.3)",
@@ -562,7 +631,8 @@ Será un gusto compartir este momento tan especial contigo.
             >
               <p
                 className="
-                  text-[9px] uppercase
+                  text-[9px]
+                  uppercase
                   tracking-[0.3em]
                 "
                 style={{
@@ -574,28 +644,55 @@ Será un gusto compartir este momento tan especial contigo.
 
               <div
                 className="
-                  mt-4 break-all border
-                  p-4 text-xs leading-6
+                  mt-4
+                  w-full
+                  min-w-0
+                  max-w-full
+                  break-all
+                  border
+                  p-4
+                  text-xs
+                  leading-6
                 "
                 style={{
                   backgroundColor: palette.paper,
                   borderColor: "rgba(164,134,84,0.3)",
                   color: palette.inkSoft,
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-all",
                 }}
               >
                 {link}
               </div>
 
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div
+                className="
+                  mt-4
+                  grid
+                  w-full
+                  min-w-0
+                  grid-cols-1
+                  gap-3
+                  sm:grid-cols-2
+                "
+              >
                 <button
                   type="button"
                   onClick={() => copiarTexto(link, "link")}
                   className="
-                    flex items-center justify-center
-                    gap-2 border px-4 py-3
-                    text-[9px] uppercase
+                    flex
+                    min-w-0
+                    items-center
+                    justify-center
+                    gap-2
+                    border
+                    px-4
+                    py-3
+                    text-[9px]
+                    uppercase
                     tracking-[0.18em]
-                    transition hover:bg-[#F5F1E8]
+                    transition
+                    hover:bg-[#F5F1E8]
                   "
                   style={{
                     borderColor: palette.ink,
@@ -603,7 +700,9 @@ Será un gusto compartir este momento tan especial contigo.
                   }}
                 >
                   {linkCopiado ? <CheckIcon /> : <CopyIcon />}
-                  {linkCopiado ? "Enlace copiado" : "Copiar enlace"}
+                  {linkCopiado
+                    ? "Enlace copiado"
+                    : "Copiar enlace"}
                 </button>
 
                 <a
@@ -611,11 +710,19 @@ Será un gusto compartir este momento tan especial contigo.
                   target="_blank"
                   rel="noopener noreferrer"
                   className="
-                    flex items-center justify-center
-                    gap-2 border px-4 py-3
-                    text-[9px] uppercase
+                    flex
+                    min-w-0
+                    items-center
+                    justify-center
+                    gap-2
+                    border
+                    px-4
+                    py-3
+                    text-[9px]
+                    uppercase
                     tracking-[0.18em]
-                    transition hover:opacity-90
+                    transition
+                    hover:opacity-90
                   "
                   style={{
                     backgroundColor: palette.ink,
@@ -630,8 +737,11 @@ Será un gusto compartir este momento tan especial contigo.
 
               <p
                 className="
-                  mt-4 font-serif
-                  text-xs italic leading-6
+                  mt-4
+                  font-serif
+                  text-xs
+                  italic
+                  leading-6
                 "
                 style={{
                   color: palette.warmGray,
@@ -650,7 +760,12 @@ Será un gusto compartir este momento tan especial contigo.
           {link && (
             <div
               className="
-                mt-9 border-t pt-8
+                mt-9
+                w-full
+                min-w-0
+                max-w-full
+                border-t
+                pt-8
               "
               style={{
                 borderColor: "rgba(164,134,84,0.3)",
@@ -658,7 +773,8 @@ Será un gusto compartir este momento tan especial contigo.
             >
               <p
                 className="
-                  text-[9px] uppercase
+                  text-[9px]
+                  uppercase
                   tracking-[0.3em]
                 "
                 style={{
@@ -670,7 +786,9 @@ Será un gusto compartir este momento tan especial contigo.
 
               <p
                 className="
-                  mt-3 text-xs leading-6
+                  mt-3
+                  text-xs
+                  leading-6
                 "
                 style={{
                   color: palette.warmGray,
@@ -688,15 +806,24 @@ Será un gusto compartir este momento tan especial contigo.
                 }}
                 rows={14}
                 className="
-                  mt-4 w-full resize-y
-                  border bg-white p-4
-                  text-sm leading-6
+                  mt-4
+                  block
+                  w-full
+                  min-w-0
+                  max-w-full
+                  resize-y
+                  border
+                  bg-white
+                  p-4
+                  text-sm
+                  leading-6
                   outline-none
                   focus:border-[#A48654]
                 "
                 style={{
                   borderColor: "rgba(164,134,84,0.4)",
                   color: palette.ink,
+                  overflowWrap: "anywhere",
                 }}
               />
 
@@ -704,33 +831,56 @@ Será un gusto compartir este momento tan especial contigo.
                 type="button"
                 onClick={() => copiarTexto(mensaje, "mensaje")}
                 className="
-                  mt-4 flex w-full
-                  items-center justify-center gap-3
-                  px-6 py-4 text-[10px]
-                  uppercase tracking-[0.22em]
-                  text-white transition
+                  mt-4
+                  flex
+                  w-full
+                  min-w-0
+                  items-center
+                  justify-center
+                  gap-3
+                  px-4
+                  py-4
+                  text-center
+                  text-[10px]
+                  uppercase
+                  tracking-[0.18em]
+                  text-white
+                  transition
                   hover:opacity-90
+                  sm:px-6
+                  sm:tracking-[0.22em]
                 "
                 style={{
                   backgroundColor: palette.antiqueGoldDark,
                 }}
               >
                 {mensajeCopiado ? <CheckIcon /> : <CopyIcon />}
-                {mensajeCopiado
-                  ? "Mensaje copiado"
-                  : "Copiar mensaje para WhatsApp"}
+                <span className="min-w-0">
+                  {mensajeCopiado
+                    ? "Mensaje copiado"
+                    : "Copiar mensaje para WhatsApp"}
+                </span>
               </button>
 
               <button
                 type="button"
                 onClick={abrirWhatsApp}
                 className="
-                  mt-3 flex w-full
-                  items-center justify-center gap-3
-                  border px-6 py-4
-                  text-[10px] uppercase
+                  mt-3
+                  flex
+                  w-full
+                  min-w-0
+                  items-center
+                  justify-center
+                  gap-3
+                  border
+                  px-6
+                  py-4
+                  text-[10px]
+                  uppercase
                   tracking-[0.22em]
-                  transition hover:bg-[#F5F1E8]
+                  transition
+                  hover:bg-[#F5F1E8]
                 "
                 style={{
                   borderColor: palette.ink,
@@ -750,14 +900,21 @@ Será un gusto compartir este momento tan especial contigo.
 
         <section
           className="
-            order-1 flex flex-col
-            items-center lg:order-2
+            order-1
+            flex
+            w-full
+            min-w-0
+            max-w-full
+            flex-col
+            items-center
+            lg:order-2
           "
         >
           <div className="mb-6 text-center">
             <p
               className="
-                text-[9px] uppercase
+                text-[9px]
+                uppercase
                 tracking-[0.32em]
               "
               style={{
@@ -772,7 +929,6 @@ Será un gusto compartir este momento tan especial contigo.
             </h2>
           </div>
 
-
           {/* =========================================
               VISTA PREVIA DE WHATSAPP
           ========================================= */}
@@ -780,13 +936,19 @@ Será un gusto compartir este momento tan especial contigo.
           {link && (
             <div
               className="
-                mt-10 w-full max-w-[430px]
+                mt-10
+                w-full
+                min-w-0
+                max-w-[430px]
               "
             >
               <p
                 className="
-                  mb-4 text-center text-[9px]
-                  uppercase tracking-[0.3em]
+                  mb-4
+                  text-center
+                  text-[9px]
+                  uppercase
+                  tracking-[0.3em]
                 "
                 style={{
                   color: palette.antiqueGoldDark,
@@ -797,8 +959,13 @@ Será un gusto compartir este momento tan especial contigo.
 
               <div
                 className="
-                  overflow-hidden rounded-2xl
-                  border border-[#D6D0C6]
+                  w-full
+                  min-w-0
+                  max-w-full
+                  overflow-hidden
+                  rounded-2xl
+                  border
+                  border-[#D6D0C6]
                 "
                 style={{
                   backgroundColor: "#EFEAE2",
@@ -809,8 +976,13 @@ Será un gusto compartir este momento tan especial contigo.
 
                 <div
                   className="
-                    flex items-center gap-3
-                    border-b px-4 py-3
+                    flex
+                    min-w-0
+                    items-center
+                    gap-3
+                    border-b
+                    px-4
+                    py-3
                   "
                   style={{
                     backgroundColor: "#F7F6F3",
@@ -819,10 +991,15 @@ Será un gusto compartir este momento tan especial contigo.
                 >
                   <div
                     className="
-                      flex h-10 w-10
-                      items-center justify-center
+                      flex
+                      h-10
+                      w-10
+                      shrink-0
+                      items-center
+                      justify-center
                       rounded-full
-                      font-serif text-lg
+                      font-serif
+                      text-lg
                     "
                     style={{
                       backgroundColor: palette.ink,
@@ -832,17 +1009,25 @@ Será un gusto compartir este momento tan especial contigo.
                     W
                   </div>
 
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <p
                       className="
-                        text-sm font-semibold
+                        break-words
+                        text-sm
+                        font-semibold
                         text-[#1D2733]
                       "
                     >
                       Vista previa del mensaje
                     </p>
 
-                    <p className="text-[11px] text-[#777168]">
+                    <p
+                      className="
+                        break-words
+                        text-[11px]
+                        text-[#777168]
+                      "
+                    >
                       Así se verá el texto al compartirlo
                     </p>
                   </div>
@@ -850,12 +1035,26 @@ Será un gusto compartir este momento tan especial contigo.
 
                 {/* BURBUJA */}
 
-                <div className="min-h-[250px] p-4">
+                <div
+                  className="
+                    w-full
+                    min-w-0
+                    max-w-full
+                    p-3
+                    sm:p-4
+                  "
+                >
                   <div
                     className="
-                      ml-auto max-w-[94%]
-                      rounded-xl rounded-tr-sm
-                      px-4 py-3
+                      ml-auto
+                      w-fit
+                      min-w-0
+                      max-w-[94%]
+                      rounded-xl
+                      rounded-tr-sm
+                      px-3
+                      py-3
+                      sm:px-4
                     "
                     style={{
                       backgroundColor: "#D9FDD3",
@@ -870,13 +1069,18 @@ Será un gusto compartir este momento tan especial contigo.
                         leading-6
                         text-[#1D2733]
                       "
+                      style={{
+                        overflowWrap: "anywhere",
+                        wordBreak: "break-word",
+                      }}
                     >
                       {renderizarMensaje(mensaje)}
                     </p>
 
                     <p
                       className="
-                        mt-2 text-right
+                        mt-2
+                        text-right
                         text-[10px]
                       "
                       style={{
@@ -891,9 +1095,14 @@ Será un gusto compartir este momento tan especial contigo.
 
               <p
                 className="
-                  mx-auto mt-4 max-w-sm
-                  text-center font-serif
-                  text-xs italic leading-6
+                  mx-auto
+                  mt-4
+                  max-w-sm
+                  text-center
+                  font-serif
+                  text-xs
+                  italic
+                  leading-6
                 "
                 style={{
                   color: palette.warmGray,
@@ -913,8 +1122,14 @@ Será un gusto compartir este momento tan especial contigo.
 
       <footer
         className="
-          mx-auto mt-16 max-w-6xl
-          border-t pt-7 text-center
+          mx-auto
+          mt-16
+          w-full
+          min-w-0
+          max-w-6xl
+          border-t
+          pt-7
+          text-center
         "
         style={{
           borderColor: "rgba(164,134,84,0.3)",
@@ -922,7 +1137,9 @@ Será un gusto compartir este momento tan especial contigo.
       >
         <p
           className="
-            text-[9px] uppercase
+            break-words
+            text-[9px]
+            uppercase
             tracking-[0.35em]
           "
           style={{
