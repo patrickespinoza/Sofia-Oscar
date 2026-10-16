@@ -480,18 +480,18 @@ useEffect(() => {
                     mt-3
                     sm:mt-6
                     font-serif
-                    text-[34px]
+                    text-[30px]
                     font-normal
                     leading-[0.95]
                     tracking-[-0.025em]
-                    sm:text-[60px]
-                    md:text-[68px]
-                    lg:text-[62px]
-                    xl:text-[76px]
+                    sm:text-[56px]
+                    md:text-[64px]
+                    lg:text-[58px]
+                    xl:text-[72px]
                   "
                   style={{ color: palette.ink }}
                 >
-                  Valeria
+                  Sofía Luz Sánchez Zavaleta
                 </h1>
 
                 <span
@@ -510,18 +510,18 @@ useEffect(() => {
                 <h1
                   className="
                     font-serif
-                    text-[34px]
+                    text-[30px]
                     font-normal
                     leading-[0.95]
                     tracking-[-0.025em]
-                    sm:text-[60px]
-                    md:text-[68px]
-                    lg:text-[62px]
-                    xl:text-[76px]
+                    sm:text-[56px]
+                    md:text-[64px]
+                    lg:text-[58px]
+                    xl:text-[72px]
                   "
                   style={{ color: palette.ink }}
                 >
-                  Alejandro
+                  Oscar Alejandro Orea Cuanalo
                 </h1>
 
                 <div className="mt-4 w-full max-w-[220px] sm:mt-8 sm:max-w-[260px]">
@@ -540,7 +540,7 @@ useEffect(() => {
                   "
                   style={{ color: palette.inkSoft }}
                 >
-                  11 · Junio · 2027
+                  19 · Diciembre · 2026
                 </p>
 
                 <p
@@ -721,7 +721,7 @@ useEffect(() => {
                       "
                       style={{ color: palette.ink }}
                     >
-                      Valeria
+                      Sofia
                     </p>
 
                     <span
@@ -745,7 +745,7 @@ useEffect(() => {
                       "
                       style={{ color: palette.ink }}
                     >
-                      Alejandro
+                      Oscar
                     </p>
 
                     <p
@@ -1137,7 +1137,7 @@ useEffect(() => {
 
         <motion.img
           src="/portada.png"
-          alt="Valeria y Alejandro"
+          alt="Sofia y Oscar"
           className="
             absolute
             inset-0
@@ -1357,7 +1357,7 @@ lg:pt-20
                 textShadow: "0 4px 24px rgba(0,0,0,0.32)",
               }}
             >
-              Valeria
+              Sofia
             </h1>
 
             <div className="my-2 flex items-center gap-3 sm:my-4 sm:gap-6">
@@ -1413,7 +1413,7 @@ lg:pt-20
                 textShadow: "0 4px 24px rgba(0,0,0,0.32)",
               }}
             >
-              Alejandro
+              Oscar
             </h1>
 
           </motion.div>
@@ -1448,7 +1448,7 @@ lg:pt-20
             }}
           >
 
-            <Countdown targetDate="2027-06-11T00:00:00" />
+            <Countdown targetDate="2026-12-19T12:00:00" />
 
             <motion.div
               className="
