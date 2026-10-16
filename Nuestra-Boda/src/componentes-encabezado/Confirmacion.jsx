@@ -57,6 +57,7 @@ const fadeUp = {
     -> ?id=...
 */
 
+
 function decodificarInvitacion(id) {
   if (!id) return null;
 
@@ -65,17 +66,40 @@ function decodificarInvitacion(id) {
     .replace(/-/g, "+")
     .replace(/_/g, "/");
 
-  const relleno = "=".repeat((4 - (base64.length % 4)) % 4);
+  const relleno = "=".repeat(
+    (4 - (base64.length % 4)) % 4
+  );
 
-  const textoInvertido = window.atob(base64 + relleno);
+  const binario = window.atob(base64 + relleno);
 
-  // Se revierte exactamente la operación del generador.
-  const textoOriginal = textoInvertido
-    .split("")
-    .reverse()
-    .join("");
+  const bytes = Uint8Array.from(
+    binario,
+    (caracter) => caracter.charCodeAt(0)
+  );
 
-  const datos = JSON.parse(textoOriginal);
+  let datos;
+
+  try {
+    // Decodificación UTF-8: conserva á, é, í, ó, ú, ñ.
+    const textoInvertido = new TextDecoder("utf-8", {
+      fatal: true,
+    }).decode(bytes);
+
+    const textoOriginal = textoInvertido
+      .split("")
+      .reverse()
+      .join("");
+
+    datos = JSON.parse(textoOriginal);
+  } catch (errorUTF8) {
+    // Permite leer enlaces creados con la versión antigua.
+    const textoOriginal = binario
+      .split("")
+      .reverse()
+      .join("");
+
+    datos = JSON.parse(textoOriginal);
+  }
 
   if (
     !datos ||
@@ -83,13 +107,21 @@ function decodificarInvitacion(id) {
     typeof datos.nombre !== "string" ||
     !datos.nombre.trim()
   ) {
-    throw new Error("El enlace no contiene un nombre válido.");
+    throw new Error(
+      "El enlace no contiene un nombre válido."
+    );
   }
 
   const pases = Number(datos.pases);
 
-  if (!Number.isInteger(pases) || pases < 1 || pases > 100) {
-    throw new Error("El enlace no contiene pases válidos.");
+  if (
+    !Number.isInteger(pases) ||
+    pases < 1 ||
+    pases > 100
+  ) {
+    throw new Error(
+      "El enlace no contiene pases válidos."
+    );
   }
 
   return {

@@ -112,89 +112,96 @@ export default function Portada() {
      SIN CAMBIOS
   ========================================= */
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+  
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
 
-    if (!id) {
-      setInvitados("Invitado");
-      setPases(1);
-      return;
-    }
+  if (!id) {
+    setInvitados("Invitado");
+    setPases(1);
+    return;
+  }
+
+  try {
+    const idNormalizado = id
+      .trim()
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+
+    const paddingFaltante = idNormalizado.length % 4;
+
+    const idConPadding =
+      paddingFaltante === 0
+        ? idNormalizado
+        : idNormalizado + "=".repeat(4 - paddingFaltante);
+
+    // Convertir Base64 a bytes.
+    const binario = atob(idConPadding);
+
+    const bytes = Uint8Array.from(
+      binario,
+      (caracter) => caracter.charCodeAt(0)
+    );
+
+    let datos;
 
     try {
-      const idNormalizado = decodeURIComponent(id)
-        .replace(/-/g, "+")
-        .replace(/_/g, "/");
-
-      const paddingFaltante = idNormalizado.length % 4;
-      const idConPadding =
-        paddingFaltante === 0
-          ? idNormalizado
-          : idNormalizado + "=".repeat(4 - paddingFaltante);
-
-      const textoInvertido = atob(idConPadding);
+      // Decodificación UTF-8 para nombres con acentos y ñ.
+      const textoInvertido = new TextDecoder("utf-8", {
+        fatal: true,
+      }).decode(bytes);
 
       const textoOriginal = textoInvertido
         .split("")
         .reverse()
         .join("");
 
-      const datos = JSON.parse(textoOriginal);
+      datos = JSON.parse(textoOriginal);
+    } catch (errorUTF8) {
+      // Compatibilidad con enlaces anteriores.
+      const textoOriginal = binario
+        .split("")
+        .reverse()
+        .join("");
 
-      const nombreDecodificado =
-        typeof datos.nombre === "string"
-          ? datos.nombre.trim()
-          : "";
-
-      const pasesDecodificados = Number.parseInt(datos.pases, 10);
-
-      if (nombreDecodificado) {
-        setInvitados(nombreDecodificado);
-      }
-
-      if (
-        !Number.isNaN(pasesDecodificados) &&
-        pasesDecodificados > 0
-      ) {
-        setPases(pasesDecodificados);
-      }
-    } catch (error) {
-      console.error(
-        "No se pudieron decodificar los datos de la invitación:",
-        error
-      );
-
-      setInvitados("Invitado");
-      setPases("");
+      datos = JSON.parse(textoOriginal);
     }
-  }, []);
 
-  useEffect(() => {
-    if (!introActiva) return;
+    const nombreDecodificado =
+      typeof datos.nombre === "string"
+        ? datos.nombre.trim()
+        : "";
 
-    const scrollAnterior = window.scrollY;
+    const pasesDecodificados = Number.parseInt(
+      datos.pases,
+      10
+    );
 
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
+    if (nombreDecodificado) {
+      setInvitados(nombreDecodificado);
+    } else {
+      setInvitados("Invitado");
+    }
 
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "auto",
-    });
+    if (
+      !Number.isNaN(pasesDecodificados) &&
+      pasesDecodificados > 0
+    ) {
+      setPases(pasesDecodificados);
+    } else {
+      setPases(1);
+    }
+  } catch (error) {
+    console.error(
+      "No se pudieron decodificar los datos de la invitación:",
+      error
+    );
 
-    return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-
-      window.scrollTo({
-        top: scrollAnterior > 0 ? 0 : scrollAnterior,
-        left: 0,
-        behavior: "auto",
-      });
-    };
-  }, [introActiva]);
+    setInvitados("Invitado");
+    setPases(1);
+  }
+}, []);
 
   /* =========================================
      APERTURA ORIGINAL DEL SOBRE
