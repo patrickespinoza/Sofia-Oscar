@@ -24,7 +24,7 @@ const palette = {
 
 const datosBancarios = {
   banco: "Banco Azteca",
-  titular: "Nombre del titular pendiente",
+  titular: "Alejandro Orea",
   numero: "5263 5401 6037 1767",
 };
 
