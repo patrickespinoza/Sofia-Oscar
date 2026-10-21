@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Gift, Landmark, Copy, Check, X } from "lucide-react";
 
 // ==========================================
-// REGALOS — ESTILO CLÁSICO WEDLY
+// CONFIGURACIÓN EDITABLE — WEDLY
 // ==========================================
 
 const palette = {
@@ -18,19 +18,11 @@ const palette = {
   warmGray: "#777168",
 };
 
-// ==========================================
-// DATOS BANCARIOS EDITABLES
-// ==========================================
-
 const datosBancarios = {
   banco: "Banco Azteca",
   titular: "Alejandro Orea",
   numero: "5263 5401 6037 1767",
 };
-
-// ==========================================
-// ANIMACIONES
-// ==========================================
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -212,6 +204,7 @@ function DecorativeEnvelope() {
 
 // ==========================================
 // TARJETA REUTILIZABLE
+// AHORA ACEPTA UN BOTÓN INTERIOR
 // ==========================================
 
 function TarjetaRegalo({
@@ -219,6 +212,7 @@ function TarjetaRegalo({
   titulo,
   descripcion,
   children,
+  accion,
   delay = 0,
 }) {
   return (
@@ -262,20 +256,9 @@ function TarjetaRegalo({
         "
       />
 
-      {/* NÚMERO */}
-
-      <p
-        className="
-          text-[9px]
-          uppercase
-          tracking-[0.3em]
-          text-[#725B37]
-        "
-      >
+      <p className="text-[9px] uppercase tracking-[0.3em] text-[#725B37]">
         Opción {numero}
       </p>
-
-      {/* TÍTULO */}
 
       <h3
         className="
@@ -295,7 +278,7 @@ function TarjetaRegalo({
         <DecorativeDivider />
       </div>
 
-      {/* CONTENIDO VISUAL */}
+      {/* ILUSTRACIÓN */}
 
       <div
         className="
@@ -325,6 +308,14 @@ function TarjetaRegalo({
       >
         {descripcion}
       </p>
+
+      {/* BOTÓN DENTRO DE LA TARJETA */}
+
+      {accion && (
+        <div className="relative z-10 mt-8 flex w-full justify-center">
+          {accion}
+        </div>
+      )}
     </motion.article>
   );
 }
@@ -472,7 +463,7 @@ function ModalBancario({ abierto, cerrar }) {
               "
             />
 
-            {/* CERRAR */}
+            {/* BOTÓN CERRAR */}
 
             <button
               ref={botonCerrarRef}
@@ -518,27 +509,13 @@ function ModalBancario({ abierto, cerrar }) {
               <Landmark size={34} strokeWidth={1.2} />
             </div>
 
-            <p
-              className="
-                mt-6
-                text-[9px]
-                uppercase
-                tracking-[0.3em]
-                text-[#725B37]
-              "
-            >
+            <p className="mt-6 text-[9px] uppercase tracking-[0.3em] text-[#725B37]">
               Un detalle con cariño
             </p>
 
             <h2
               id="titulo-modal-banco"
-              className="
-                mt-4
-                font-serif
-                text-[30px]
-                text-[#1D2733]
-                sm:text-[38px]
-              "
+              className="mt-4 font-serif text-[30px] text-[#1D2733] sm:text-[38px]"
             >
               Datos bancarios
             </h2>
@@ -573,7 +550,7 @@ function ModalBancario({ abierto, cerrar }) {
 
             <div className="mx-auto my-8 h-px w-full max-w-[330px] bg-[#A48654]/45" />
 
-            {/* NÚMERO */}
+            {/* NÚMERO DE TARJETA */}
 
             <div className="w-full min-w-0">
               <p className="text-[9px] uppercase tracking-[0.25em] text-[#725B37]">
@@ -804,7 +781,7 @@ export default function Regalos() {
             text-center
           "
         >
-          {/* ICONO PRINCIPAL */}
+          {/* ÍCONO PRINCIPAL */}
 
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
@@ -827,8 +804,6 @@ export default function Regalos() {
           >
             <Gift size={33} strokeWidth={1.2} />
           </motion.div>
-
-          {/* TEXTO SUPERIOR */}
 
           <p
             className="
@@ -866,8 +841,6 @@ export default function Regalos() {
             Mesa de regalos
           </h2>
 
-          {/* DESCRIPCIÓN ACTUALIZADA */}
-
           <p
             className="
               mx-auto
@@ -904,9 +877,7 @@ export default function Regalos() {
               lg:gap-7
             "
           >
-            {/* ==================================
-                OPCIÓN 01 — LLUVIA DE SOBRES
-            ================================== */}
+            {/* OPCIÓN 01 — LLUVIA DE SOBRES */}
 
             <TarjetaRegalo
               numero="01"
@@ -924,6 +895,7 @@ export default function Regalos() {
 
             {/* ==================================
                 OPCIÓN 02 — TRANSFERENCIA
+                BOTÓN DENTRO DE LA TARJETA
             ================================== */}
 
             <TarjetaRegalo
@@ -935,6 +907,42 @@ export default function Regalos() {
                 también puedes hacerlo mediante una
                 transferencia bancaria.
               "
+              accion={
+                <button
+                  ref={botonAbrirRef}
+                  type="button"
+                  onClick={() => setModalAbierto(true)}
+                  className="
+                    inline-flex
+                    min-h-[50px]
+                    w-full
+                    max-w-[245px]
+                    items-center
+                    justify-center
+                    gap-2
+                    border
+                    border-[#1D2733]
+                    bg-[#1D2733]
+                    px-4
+                    py-3.5
+                    text-[10px]
+                    uppercase
+                    tracking-[0.12em]
+                    text-white
+                    transition
+                    duration-300
+                    hover:bg-[#39434D]
+                    sm:tracking-[0.14em]
+                  "
+                >
+                  <Landmark
+                    size={17}
+                    strokeWidth={1.4}
+                    className="shrink-0"
+                  />
+                  Ver datos bancarios
+                </button>
+              }
             >
               <div
                 className="
@@ -951,15 +959,9 @@ export default function Regalos() {
               >
                 <Landmark size={54} strokeWidth={1.1} />
               </div>
-
-              <span className="sr-only">
-                Transferencia bancaria
-              </span>
             </TarjetaRegalo>
 
-            {/* ==================================
-                OPCIÓN 03 — REGALOS FÍSICOS
-            ================================== */}
+            {/* OPCIÓN 03 — REGALOS FÍSICOS */}
 
             <TarjetaRegalo
               numero="03"
@@ -990,55 +992,7 @@ export default function Regalos() {
             </TarjetaRegalo>
           </div>
 
-          {/* ==================================
-              BOTÓN BANCARIO
-          ================================== */}
-
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-9"
-          >
-            <button
-              ref={botonAbrirRef}
-              type="button"
-              onClick={() => setModalAbierto(true)}
-              className="
-                inline-flex
-                min-h-[50px]
-                items-center
-                justify-center
-                gap-3
-                border
-                border-[#1D2733]
-                bg-[#1D2733]
-                px-6
-                py-3.5
-                text-[10px]
-                uppercase
-                tracking-[0.14em]
-                text-white
-                transition
-                duration-300
-                hover:bg-[#39434D]
-                sm:px-9
-                sm:tracking-[0.2em]
-              "
-            >
-              <Landmark size={17} strokeWidth={1.4} />
-              Ver datos bancarios
-            </button>
-          </motion.div>
-
-          <ModalBancario
-            abierto={modalAbierto}
-            cerrar={cerrarModal}
-          />
-          {/* ==================================
-              MENSAJE FINAL
-          ================================== */}
+          {/* MENSAJE FINAL */}
 
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -1074,10 +1028,13 @@ export default function Regalos() {
         </div>
       </motion.section>
 
-      {/* ==================================
-          VENTANA EMERGENTE BANCARIA
-      ================================== */}
+      {/* MODAL FUERA DE LAS TARJETAS,
+          PERO CONTROLADO POR EL BOTÓN INTERIOR */}
 
+      <ModalBancario
+        abierto={modalAbierto}
+        cerrar={cerrarModal}
+      />
     </>
   );
 }
