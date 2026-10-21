@@ -1032,6 +1032,10 @@ export default function Regalos() {
             </button>
           </motion.div>
 
+          <ModalBancario
+            abierto={modalAbierto}
+            cerrar={cerrarModal}
+          />
           {/* ==================================
               MENSAJE FINAL
           ================================== */}
@@ -1074,10 +1078,6 @@ export default function Regalos() {
           VENTANA EMERGENTE BANCARIA
       ================================== */}
 
-      <ModalBancario
-        abierto={modalAbierto}
-        cerrar={cerrarModal}
-      />
     </>
   );
 }
